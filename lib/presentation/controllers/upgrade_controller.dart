@@ -30,7 +30,6 @@ class UpgradeController extends ValueNotifier<List<Upgrade>> {
     try {
       if (dustController.value >= upgrade.cost) {
         statsController.upgradeDustPerClick(upgrade.dustPerClickBonus);
-        statsController.upgradeDustPerSecond(upgrade.dustPerSecondBonus);
 
         dustController.removeDust(upgrade.cost);
       } else {

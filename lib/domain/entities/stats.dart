@@ -1,16 +1,16 @@
 class Stats {
   final int dustPerClick;
-  final int dustPerSecond;
+  final bool autoClickActive;
 
   Stats({
     required this.dustPerClick,
-    required this.dustPerSecond,
+    required this.autoClickActive,
   });
 
-  Stats copyWith({int? dustPerClick, int? dustPerSecond}) {
+  Stats copyWith({int? dustPerClick, bool? autoClickActive}) {
     return Stats(
       dustPerClick: dustPerClick ?? this.dustPerClick,
-      dustPerSecond: dustPerSecond ?? this.dustPerSecond,
+      autoClickActive: autoClickActive ?? this.autoClickActive,
     );
   }
 }

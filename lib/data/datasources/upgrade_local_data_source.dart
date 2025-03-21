@@ -17,7 +17,7 @@ class UpgradeLocalDataSourceImpl implements UpgradeLocalDataSource {
   Future<void> saveStats(stats) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setInt(_dustPerClickKey, stats.dustPerClick);
-    prefs.setInt(_dustPerSecondKey, stats.dustPerSecond);
+    prefs.setBool(_dustPerSecondKey, stats.autoClickActive);
   }
 
   @override

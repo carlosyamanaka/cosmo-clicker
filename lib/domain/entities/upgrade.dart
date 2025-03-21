@@ -16,7 +16,6 @@ class Upgrade {
   Stats apply(Stats currentStats) {
     return currentStats.copyWith(
       dustPerClick: currentStats.dustPerClick + dustPerClickBonus,
-      dustPerSecond: currentStats.dustPerSecond + dustPerSecondBonus,
     );
   }
 }

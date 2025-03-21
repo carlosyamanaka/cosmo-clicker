@@ -8,24 +8,24 @@ abstract class StatsLocalDataSource {
 
 class StatsLocalDataSourceImpl implements StatsLocalDataSource {
   static const _dustPerClickKey = 'dustPerClick';
-  static const _dustPerSecondKey = 'dustPerSecond';
+  static const _autoClickActiveKey = 'autoClickActive';
 
   @override
   Future<void> saveStats(Stats stats) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setInt(_dustPerClickKey, stats.dustPerClick);
-    prefs.setInt(_dustPerSecondKey, stats.dustPerSecond);
+    prefs.setBool(_autoClickActiveKey, stats.autoClickActive);
   }
 
   @override
   Future<Stats> getStats() async {
     final prefs = await SharedPreferences.getInstance();
-    final dustPerClick = prefs.getInt(_dustPerClickKey) ?? 1;
-    final dustPerSecond = prefs.getInt(_dustPerSecondKey) ?? 0;
+    final int dustPerClick = prefs.getInt(_dustPerClickKey) ?? 1;
+    final bool autoClickActive = prefs.getBool(_autoClickActiveKey) ?? false;
 
     return Stats(
       dustPerClick: dustPerClick,
-      dustPerSecond: dustPerSecond,
+      autoClickActive: autoClickActive,
     );
   }
 }
