@@ -43,28 +43,22 @@ class _HomepageState extends State<Homepage> {
         child: ListenableBuilder(
           listenable: Listenable.merge([dustController, statsController]),
           builder: (context, _) {
-            return FutureBuilder(
-                future: statsController
-                    .getStats()
-                    .then((value) => value.dustPerClick),
-                builder: (context, snapshot) {
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text('Dust: ${dustController.value}',
-                          style: const TextStyle(fontSize: 24)),
-                      const SizedBox(height: 20),
-                      InkWell(
-                        onTap: () {
-                          dustController.addDust(snapshot.data as int);
-                        },
-                        child: const Image(
-                          image: AssetImage('assets/images/estrela.png'),
-                        ),
-                      ),
-                    ],
-                  );
-                });
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text('Dust: ${dustController.value}',
+                    style: const TextStyle(fontSize: 24)),
+                const SizedBox(height: 20),
+                InkWell(
+                  onTap: () {
+                    dustController.addDust(statsController.value.dustPerClick);
+                  },
+                  child: const Image(
+                    image: AssetImage('assets/images/estrela.png'),
+                  ),
+                ),
+              ],
+            );
           },
         ),
       ),

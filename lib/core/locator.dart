@@ -62,9 +62,13 @@ void setupLocator() {
   locator.registerLazySingleton<DustController>(
       () => DustController(locator<GetDust>(), locator<UpdateDust>()));
 
-  locator.registerFactory<StatsController>(
+  locator.registerLazySingleton<StatsController>(
       () => StatsController(locator<GetStats>(), locator<UpdateStats>()));
 
   locator.registerLazySingleton<UpgradeController>(() => UpgradeController(
-      locator<GetAvailableUpgrades>(), locator<BuyUpgrade>()));
+        locator<GetAvailableUpgrades>(),
+        locator<BuyUpgrade>(),
+        locator<DustController>(),
+        locator<StatsController>(),
+      ));
 }

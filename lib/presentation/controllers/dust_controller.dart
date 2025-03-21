@@ -20,4 +20,10 @@ class DustController extends ValueNotifier<int> {
     updateDust(value);
     notifyListeners();
   }
+
+  void removeDust(int amount) {
+    value -= amount;
+    updateDust(value);
+    notifyListeners();
+  }
 }

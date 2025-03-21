@@ -7,24 +7,30 @@ class StatsController extends ValueNotifier<Stats> {
   final GetStats getStats;
   final UpdateStats updateStats;
 
-  StatsController(this.getStats, this.updateStats) : super(Stats(dustPerClick: 1, dustPerSecond: 0)) {
-    _loadStats();
+  StatsController(this.getStats, this.updateStats)
+      : super(Stats(dustPerClick: 1, dustPerSecond: 0)) {
+    loadStats();
   }
 
-  Future<void> _loadStats() async {
+  Future<void> loadStats() async {
     final stats = await getStats();
+    print(stats);
     value = stats;
   }
 
-  Future<void> upgradeDustPerClick() async {
-    final updatedStats = value.copyWith(dustPerClick: value.dustPerClick + 1);
+  Future<void> upgradeDustPerClick(int amount) async {
+    final updatedStats =
+        value.copyWith(dustPerClick: value.dustPerClick + amount);
     value = updatedStats;
+    notifyListeners();
     await updateStats(updatedStats);
   }
 
-  Future<void> upgradeDustPerSecond() async {
-    final updatedStats = value.copyWith(dustPerSecond: value.dustPerSecond + 1);
+  Future<void> upgradeDustPerSecond(int amount) async {
+    final updatedStats =
+        value.copyWith(dustPerSecond: value.dustPerSecond + amount);
     value = updatedStats;
+    notifyListeners();
     await updateStats(updatedStats);
   }
 }

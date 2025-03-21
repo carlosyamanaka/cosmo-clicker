@@ -75,14 +75,12 @@ class _ShopPageState extends State<ShopPage> {
                           final dust = await dustController.getDust();
 
                           if (dust.amount >= upgrade.cost) {
-                            await upgradeController.buyUpgrade(upgrade);
-
+                            await upgradeController.buyUpgradeItem(upgrade);
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                   content:
                                       Text('Upgrade comprado com sucesso!')),
                             );
-                            setState(() {});
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
