@@ -10,7 +10,7 @@ class CosmoClickerApp extends StatelessWidget {
       title: 'Star Clicker',
       theme: ThemeData.dark(),
       debugShowCheckedModeBanner: false,
-      home: const Homepage(),
+      home: const HomePage(),
     );
   }
 }
