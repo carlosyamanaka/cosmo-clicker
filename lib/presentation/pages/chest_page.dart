@@ -1,5 +1,8 @@
-import 'package:easy_localization/easy_localization.dart';
+import 'dart:async';
+import 'package:cosmo_clicker/domain/entities/chest.dart';
+import 'package:cosmo_clicker/presentation/controllers/chest_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 
 class ChestPage extends StatefulWidget {
   const ChestPage({super.key});
@@ -9,38 +12,74 @@ class ChestPage extends StatefulWidget {
 }
 
 class _ChestPageState extends State<ChestPage> {
-  ValueNotifier<DateTime> date = ValueNotifier(DateTime.now());
-  updateTime() async {
-    setState(() {
-      date.value = DateTime.now();
+  late final ChestController chestController;
+  late final ValueNotifier<DateTime> dateTimeNow;
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    chestController = GetIt.instance<ChestController>();
+    dateTimeNow = ValueNotifier(DateTime.now());
+
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+      dateTimeNow.value = DateTime.now();
     });
-    await Future.delayed(const Duration(seconds: 1), updateTime());
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    dateTimeNow.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: ListenableBuilder(
-          listenable: Listenable.merge([date]),
-          builder: (context, _) {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text('${DateFormat('MMM y').format(date.value)}',
-                    style: const TextStyle(fontSize: 24)),
-                const SizedBox(height: 20),
-                // InkWell(
-                //   onTap: () {},
-                //   child: const Image(
-                //     image: AssetImage('assets/images/estrela.png'),
-                //   ),
-                // ),
+    return ListenableBuilder(
+      listenable: Listenable.merge([chestController, dateTimeNow]),
+      builder: (context, _) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(
+              width: 100,
+              child: InkWell(
+                onTap: () {
+                  chestController.addChest(Chest(
+                      openDate: DateTime.now(),
+                      rarity: ChestRarity.rare,
+                      type: ChestType.dust));
+                },
+                child: const Image(
+                  image: AssetImage('assets/images/estrela.png'),
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(
+                  height: 200,
+                  width: 200,
+                  child: ListView.builder(
+                    itemCount: chestController.value.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final chest = chestController.value[index];
+                      final duration = dateTimeNow.value.difference(chest.openDate);
+                      
+                      return Text(
+                        '${duration.inMinutes}:${(duration.inSeconds % 60).toString().padLeft(2, '0')}',
+                      );
+                    },
+                  ),
+                ),
               ],
-            );
-          },
-        ),
-      ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

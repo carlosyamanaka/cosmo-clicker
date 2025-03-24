@@ -1,6 +1,5 @@
 import 'package:cosmo_clicker/presentation/controllers/dust_controller.dart';
 import 'package:cosmo_clicker/presentation/controllers/stats_controller.dart';
-import 'package:cosmo_clicker/presentation/pages/chest_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
@@ -24,8 +23,7 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
+    return Center(
         child: ListenableBuilder(
           listenable: Listenable.merge([dustController, statsController]),
           builder: (context, _) {
@@ -47,7 +45,6 @@ class _MainPageState extends State<MainPage> {
             );
           },
         ),
-      ),
     );
   }
 }

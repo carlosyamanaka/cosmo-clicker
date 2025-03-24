@@ -29,19 +29,7 @@ class _ShopPageState extends State<ShopPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Loja de Upgrades'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.home),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-        ],
-      ),
-      body: ListenableBuilder(
+    return ListenableBuilder(
           listenable: upgradeController,
           builder: (context, _) {
             return FutureBuilder<List<Upgrade>>(
@@ -95,7 +83,7 @@ class _ShopPageState extends State<ShopPage> {
                 );
               },
             );
-          }),
+          }
     );
   }
 }

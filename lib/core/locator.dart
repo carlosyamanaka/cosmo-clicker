@@ -1,14 +1,20 @@
+import 'package:cosmo_clicker/data/datasources/chest_local_data_source.dart';
 import 'package:cosmo_clicker/data/datasources/stats_local_data_source.dart';
 import 'package:cosmo_clicker/data/datasources/upgrade_local_data_source.dart';
+import 'package:cosmo_clicker/data/source/chest_repository_impl.dart';
 import 'package:cosmo_clicker/data/source/dust_repository_impl.dart';
 import 'package:cosmo_clicker/data/source/stats_repository_impl.dart';
 import 'package:cosmo_clicker/data/source/upgrade_repository_impl.dart';
+import 'package:cosmo_clicker/domain/repositories/chest_repository.dart';
 import 'package:cosmo_clicker/domain/repositories/stats_repository.dart';
 import 'package:cosmo_clicker/domain/repositories/upgrade_repository.dart';
 import 'package:cosmo_clicker/domain/usecases/buy_upgrade.dart';
 import 'package:cosmo_clicker/domain/usecases/get_available_upgrades.dart';
+import 'package:cosmo_clicker/domain/usecases/get_chests.dart';
 import 'package:cosmo_clicker/domain/usecases/get_stats.dart';
+import 'package:cosmo_clicker/domain/usecases/save_chest.dart';
 import 'package:cosmo_clicker/domain/usecases/update_stats.dart';
+import 'package:cosmo_clicker/presentation/controllers/chest_controller.dart';
 import 'package:cosmo_clicker/presentation/controllers/stats_controller.dart';
 import 'package:cosmo_clicker/presentation/controllers/upgrade_controller.dart';
 import 'package:get_it/get_it.dart';
@@ -24,12 +30,14 @@ void setupLocator() {
   // Data Source
   locator.registerLazySingleton<DustLocalDataSource>(
       () => DustLocalDataSourceImpl());
-
   locator.registerLazySingleton<StatsLocalDataSource>(
     () => StatsLocalDataSourceImpl(),
   );
   locator.registerLazySingleton<UpgradeLocalDataSource>(
     () => UpgradeLocalDataSourceImpl(),
+  );
+  locator.registerLazySingleton<ChestLocalDataSource>(
+    () => ChestLocalDataSourceImpl(),
   );
 
   // Repository
@@ -41,6 +49,8 @@ void setupLocator() {
       locator<DustLocalDataSource>()));
   locator.registerLazySingleton<StatsRepository>(
       () => StatsRepositoryImpl(locator<StatsLocalDataSource>()));
+  locator.registerLazySingleton<ChestRepository>(
+      () => ChestRepositoryImpl(locator<ChestLocalDataSource>()));
 
   // Use Cases
   locator
@@ -58,6 +68,11 @@ void setupLocator() {
   locator.registerLazySingleton<BuyUpgrade>(
       () => BuyUpgrade(locator<UpgradeRepository>()));
 
+  locator.registerLazySingleton<GetChests>(
+      () => GetChests(locator<ChestRepository>()));
+  locator.registerLazySingleton<SaveChest>(
+      () => SaveChest(locator<ChestRepository>()));
+
   // Controller
   locator.registerLazySingleton<DustController>(
       () => DustController(locator<GetDust>(), locator<UpdateDust>()));
@@ -71,4 +86,7 @@ void setupLocator() {
         locator<DustController>(),
         locator<StatsController>(),
       ));
+
+  locator.registerLazySingleton<ChestController>(
+      () => ChestController(locator<GetChests>(), locator<SaveChest>()));
 }
