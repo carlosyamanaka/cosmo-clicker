@@ -25,20 +25,6 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Cosmo Clicker'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.shopping_cart),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const ChestPage()),
-              );
-            },
-          ),
-        ],
-      ),
       body: Center(
         child: ListenableBuilder(
           listenable: Listenable.merge([dustController, statsController]),
