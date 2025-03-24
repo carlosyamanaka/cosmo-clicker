@@ -12,6 +12,7 @@
 .buildlog/
 .history
 .svn/
+migrate_working_dir/
 
 # IntelliJ related
 *.iml
@@ -44,6 +45,7 @@
 /packages/flutter/coverage/
 version
 analysis_benchmark.json
+pubspec.lock
 
 # packages file containing multi-root paths
 .packages.generated
@@ -58,7 +60,9 @@ analysis_benchmark.json
 .pub-preload-cache/
 .pub-cache/
 .pub/
-build/
+/build/
+# Node.js dependencies
+/node_modules/
 flutter_*.png
 linked_*.ds
 unlinked.ds
@@ -134,10 +138,4 @@ app.*.symbols
 # Exceptions to above rules.
 !**/ios/**/default.mode1v3
 !**/ios/**/default.mode2v3
-!**/ios/**/default.pbxuser
-!**/ios/**/default.perspectivev3
-!/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
-!/dev/ci/**/Gemfile.lock
-!.vscode/settings.json
-
-*.env
+!**/ios/**/de
