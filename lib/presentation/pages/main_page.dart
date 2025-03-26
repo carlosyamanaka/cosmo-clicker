@@ -24,27 +24,24 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Center(
-        child: ListenableBuilder(
-          listenable: Listenable.merge([dustController, statsController]),
-          builder: (context, _) {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text('Dust: ${dustController.value}',
-                    style: const TextStyle(fontSize: 24)),
-                const SizedBox(height: 20),
-                InkWell(
-                  onTap: () {
-                    dustController.addDust(statsController.value.dustPerClick);
-                  },
-                  child: const Image(
-                    image: AssetImage('assets/images/estrela.png'),
-                  ),
+      child: ListenableBuilder(
+        listenable: Listenable.merge([dustController, statsController]),
+        builder: (context, _) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              InkWell(
+                onTap: () {
+                  dustController.addDust(statsController.value.dustPerClick);
+                },
+                child: const Image(
+                  image: AssetImage('assets/images/cosmo_main.png'),
                 ),
-              ],
-            );
-          },
-        ),
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
 }
