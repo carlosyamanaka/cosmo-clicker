@@ -66,7 +66,10 @@ class _ParticleExplositonState extends State<ParticleExplosion>
   }
 
   void _updateParticles() {
+    const Offset gravity = Offset(0, 0.1);
+
     for (final particle in _particles) {
+      particle.velocity += gravity;
       particle.position += particle.velocity;
       particle.lifetime -= 0.02;
     }
