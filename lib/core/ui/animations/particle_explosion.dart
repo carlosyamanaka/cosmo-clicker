@@ -4,14 +4,15 @@ import 'package:cosmo_clicker/core/ui/animations/particle.dart';
 import 'package:cosmo_clicker/core/ui/animations/particle_painter.dart';
 import 'package:flutter/material.dart';
 
-class ParticleExplositon extends StatefulWidget {
-  const ParticleExplositon({super.key});
+class ParticleExplosion extends StatefulWidget {
+  final Offset? tapPosition;
+  const ParticleExplosion({super.key, this.tapPosition});
 
   @override
-  State<ParticleExplositon> createState() => _ParticleExplositonState();
+  State<ParticleExplosion> createState() => _ParticleExplositonState();
 }
 
-class _ParticleExplositonState extends State<ParticleExplositon>
+class _ParticleExplositonState extends State<ParticleExplosion>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late List<Particle> _particles;
@@ -31,6 +32,14 @@ class _ParticleExplositonState extends State<ParticleExplositon>
   }
 
   @override
+  void didUpdateWidget(covariant ParticleExplosion oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.tapPosition != null) {
+      _generateParticles(widget.tapPosition!);
+    }
+  }
+
+  @override
   void dispose() {
     _controller.dispose();
     super.dispose();
@@ -38,25 +47,26 @@ class _ParticleExplositonState extends State<ParticleExplositon>
 
   void _generateParticles(Offset tapPosition) {
     final random = Random();
-    _particles = List.generate(100, (_) {
+    List<Particle> newParticles = List.generate(60, (_) {
       final direction = random.nextDouble() * 2 * pi;
-      final speed = random.nextDouble() * 5 + 2;
+      final speed = random.nextDouble() * 2 + 1;
 
       return Particle(
         position: tapPosition,
         velocity: Offset(cos(direction) * speed, sin(direction) * speed),
-        color: Colors.purple,
-        size: 10,
-        lifetime: 1.0,
+        color: Colors.white70,
+        size: 2,
+        lifetime: 0.7,
       );
     });
 
+    _particles.addAll(newParticles);
     _controller.reset();
     _controller.forward();
   }
 
   void _updateParticles() {
-    for(final particle in _particles) {
+    for (final particle in _particles) {
       particle.position += particle.velocity;
       particle.lifetime -= 0.02;
     }
@@ -65,12 +75,8 @@ class _ParticleExplositonState extends State<ParticleExplositon>
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTapDown: (details) {
-        _generateParticles(details.localPosition);
-      },
+    return Positioned.fill(
       child: CustomPaint(
-        size: MediaQuery.of(context).size,
         painter: ParticlePainter(_particles),
       ),
     );
