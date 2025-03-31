@@ -9,11 +9,15 @@ class UpgradeRepositoryImpl implements UpgradeRepository {
   final StatsLocalDataSource statsDataSource;
   final DustLocalDataSource dustDataSource;
 
-  UpgradeRepositoryImpl(this.localDataSource, this.statsDataSource, this.dustDataSource);
+  UpgradeRepositoryImpl(
+      this.localDataSource, this.statsDataSource, this.dustDataSource);
 
   final List<Upgrade> _availableUpgrades = [
-    Upgrade(name: "Melhoria da Poeira", cost: 1, dustPerClickBonus: 1),
-    Upgrade(name: "Coletor Estelar", cost: 2, dustPerSecondBonus: 5),
+    Upgrade(
+        name: "Supernova",
+        description: "Aumenta a quantidade de Dust gerada por click em um",
+        cost: 10,
+        dustPerClickBonus: 1),
   ];
 
   @override

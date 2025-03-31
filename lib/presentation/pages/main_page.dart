@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:cosmo_clicker/core/ui/animations/particle_explosion.dart';
 import 'package:cosmo_clicker/presentation/controllers/dust_controller.dart';
 import 'package:cosmo_clicker/presentation/controllers/stats_controller.dart';
@@ -14,22 +13,24 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   final ValueNotifier<Offset?> _tapPositionNotifier = ValueNotifier(null);
-  final bool _autoClickerOn = true;
 
   late final DustController dustController;
   late final StatsController statsController;
+
+  late final bool _autoClickActive;
+
+  int _shouldAutoClick = 0;
 
   @override
   void initState() {
     super.initState();
     dustController = GetIt.instance<DustController>();
     statsController = GetIt.instance<StatsController>();
+    _autoClickActive = statsController.value.autoClickActive;
   }
 
   void _updateTapPosition(Offset position) {
-    if (_autoClickerOn) {
-      _tapPositionNotifier.value = position;
-    }
+    _tapPositionNotifier.value = position;
   }
 
   @override
@@ -40,8 +41,15 @@ class _MainPageState extends State<MainPage> {
         builder: (context, _) {
           return GestureDetector(
             onPanUpdate: (details) {
-              dustController.addDust(statsController.value.dustPerClick);
-              _updateTapPosition(details.localPosition);
+              if (_autoClickActive) {
+                _shouldAutoClick++;
+                if (_shouldAutoClick >= 20) {
+                  dustController.addDust(statsController.value.dustPerClick);
+                  _updateTapPosition(details.localPosition);
+
+                  _shouldAutoClick = 0;
+                }
+              }
             },
             onTapDown: (details) {
               _updateTapPosition(details.localPosition);

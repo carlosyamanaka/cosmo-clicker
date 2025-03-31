@@ -20,8 +20,16 @@ class StatsController extends ValueNotifier<Stats> {
   Future<void> upgradeDustPerClick(int amount) async {
     final updatedStats =
         value.copyWith(dustPerClick: value.dustPerClick + amount);
+    await updateStats(updatedStats);
     value = updatedStats;
     notifyListeners();
+  }
+
+  Future<void> toggleAutoClick() async {
+    final updatedStats =
+        value.copyWith(autoClickActive: !value.autoClickActive);
     await updateStats(updatedStats);
+    value = updatedStats;
+    notifyListeners();
   }
 }
