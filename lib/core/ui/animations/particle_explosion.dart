@@ -1,32 +1,33 @@
 import 'dart:math';
-
-import 'package:cosmo_clicker/core/ui/animations/particle.dart';
-import 'package:cosmo_clicker/core/ui/animations/particle_painter.dart';
 import 'package:flutter/material.dart';
+import 'particle.dart';
+import 'particle_painter.dart';
 
 class ParticleExplosion extends StatefulWidget {
   final Offset? tapPosition;
   const ParticleExplosion({super.key, this.tapPosition});
 
   @override
-  State<ParticleExplosion> createState() => _ParticleExplositonState();
+  State<ParticleExplosion> createState() => _ParticleExplosionState();
 }
 
-class _ParticleExplositonState extends State<ParticleExplosion>
+class _ParticleExplosionState extends State<ParticleExplosion>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late List<Particle> _particles;
+  final int _maxParticles = 150;
 
   @override
   void initState() {
     super.initState();
-    _controller =
-        AnimationController(duration: const Duration(seconds: 2), vsync: this)
-          ..addListener(() {
-            setState(() {
-              _updateParticles();
-            });
-          });
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 900),
+      vsync: this,
+    )..addListener(() {
+        setState(() {
+          _updateParticles();
+        });
+      });
 
     _particles = [];
   }
@@ -47,16 +48,36 @@ class _ParticleExplositonState extends State<ParticleExplosion>
 
   void _generateParticles(Offset tapPosition) {
     final random = Random();
-    List<Particle> newParticles = List.generate(60, (_) {
-      final direction = random.nextDouble() * 2 * pi;
+    int particleNumberGenerate = 15;
+
+    if (_particles.length > _maxParticles) {
+      particleNumberGenerate = 7;
+    }
+
+    double generateValidDirection(Random random) {
+      double direction = random.nextDouble() * 2 * pi;
+
+      // Se tiver entre 265 e 275 graus, joga pra baixo
+      if (direction > 265 * pi / 180 && direction < 275 * pi / 180) {
+        direction += pi;
+      }
+
+      return direction;
+    }
+
+    List<Particle> newParticles = List.generate(particleNumberGenerate, (_) {
+      final direction = generateValidDirection(random);
       final speed = random.nextDouble() * 2 + 1;
+      final gravity = Offset(0, random.nextDouble() * 0.1);
+      final size = random.nextDouble() * 2 + 1;
 
       return Particle(
         position: tapPosition,
         velocity: Offset(cos(direction) * speed, sin(direction) * speed),
-        color: Colors.white70,
-        size: 2,
-        lifetime: 0.7,
+        gravity: gravity,
+        color: Color.lerp(Colors.orange, Colors.yellow, random.nextDouble())!,
+        size: size,
+        lifetime: random.nextDouble() * 0.5 + 0.4,
       );
     });
 
@@ -66,10 +87,8 @@ class _ParticleExplositonState extends State<ParticleExplosion>
   }
 
   void _updateParticles() {
-    const Offset gravity = Offset(0, 0.1);
-
     for (final particle in _particles) {
-      particle.velocity += gravity;
+      particle.velocity += particle.gravity;
       particle.position += particle.velocity;
       particle.lifetime -= 0.02;
     }
