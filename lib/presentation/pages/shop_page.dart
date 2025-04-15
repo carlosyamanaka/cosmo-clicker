@@ -52,6 +52,7 @@ class _ShopPageState extends State<ShopPage> {
                 child: Column(
                   children: [
                     UpgradeList(upgrades: upgrades),
+                    const SizedBox(height: 16),
                     AutoClickToggle(statsController: statsController),
                   ],
                 ),

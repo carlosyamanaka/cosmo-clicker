@@ -23,4 +23,10 @@ class ChestController extends ValueNotifier<List<Chest>> {
     notifyListeners();
     await saveChest(chest);
   }
+
+  Future<void> removeChest(Chest chest) async {
+    final updatedChests = List<Chest>.from(value)..remove(chest);
+    value = updatedChests;
+    notifyListeners();
+  }
 }

@@ -6,6 +6,7 @@ class Upgrade {
   final int cost;
   final int dustPerClickBonus;
   final int dustPerSecondBonus;
+  final int chestChanceBonus;
 
   Upgrade({
     required this.name,
@@ -13,6 +14,7 @@ class Upgrade {
     required this.cost,
     this.dustPerClickBonus = 0,
     this.dustPerSecondBonus = 0,
+    this.chestChanceBonus = 0,
   });
 
   Stats apply(Stats currentStats) {

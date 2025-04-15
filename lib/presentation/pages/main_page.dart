@@ -33,6 +33,11 @@ class _MainPageState extends State<MainPage> {
     _tapPositionNotifier.value = position;
   }
 
+  void _clickHandler(details) {
+    dustController.addDust(statsController.value.dustPerClick);
+    _updateTapPosition(details.localPosition);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -44,16 +49,14 @@ class _MainPageState extends State<MainPage> {
               if (_autoClickActive) {
                 _shouldAutoClick++;
                 if (_shouldAutoClick >= 20) {
-                  dustController.addDust(statsController.value.dustPerClick);
-                  _updateTapPosition(details.localPosition);
+                  _clickHandler(details);
 
                   _shouldAutoClick = 0;
                 }
               }
             },
             onTapDown: (details) {
-              _updateTapPosition(details.localPosition);
-              dustController.addDust(statsController.value.dustPerClick);
+              _clickHandler(details);
             },
             child: Stack(
               children: [

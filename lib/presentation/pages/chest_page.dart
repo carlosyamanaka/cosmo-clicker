@@ -16,7 +16,7 @@ class ChestPage extends StatefulWidget {
 class _ChestPageState extends State<ChestPage> {
   late final ChestController chestController;
   late final DustController dustController;
-  late final ValueNotifier<DateTime> dateTimeNow;
+  late final ValueNotifier<DateTime> currentTimeNotifier;
   Timer? _timer;
 
   @override
@@ -24,21 +24,21 @@ class _ChestPageState extends State<ChestPage> {
     super.initState();
     chestController = GetIt.instance<ChestController>();
     dustController = GetIt.instance<DustController>();
-    dateTimeNow = ValueNotifier(DateTime.now());
+    currentTimeNotifier = ValueNotifier(DateTime.now());
 
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
-      dateTimeNow.value = DateTime.now();
+      currentTimeNotifier.value = DateTime.now();
     });
   }
 
   @override
   void dispose() {
     _timer?.cancel();
-    dateTimeNow.dispose();
+    currentTimeNotifier.dispose();
     super.dispose();
   }
 
-  Widget showChestImage(chest) {
+  Widget buildChestImage(chest) {
     switch (chest.type) {
       case ChestType.dust:
         return const Image(
@@ -56,7 +56,7 @@ class _ChestPageState extends State<ChestPage> {
     }
   }
 
-  Future<int> chestRewardHandler() async {
+  Future<int> generateChestReward() async {
     final random = Random();
     final int dust = 50 + random.nextInt(151);
     Future.delayed(const Duration(seconds: 1), () {
@@ -65,7 +65,8 @@ class _ChestPageState extends State<ChestPage> {
     return dust;
   }
 
-  Widget openChestTimer(Chest chest, Duration duration, BuildContext context) {
+  Widget buildChestOpener(
+      Chest chest, Duration duration, BuildContext context) {
     final remainingTime = const Duration(hours: 1) - duration;
     if (remainingTime <= Duration.zero) {
       return InkWell(
@@ -94,7 +95,8 @@ class _ChestPageState extends State<ChestPage> {
             },
           );
 
-          final dust = await chestRewardHandler();
+          final dust = await generateChestReward();
+          chestController.removeChest(chest);
           if (!context.mounted) return;
           Navigator.of(context).pop();
 
@@ -141,7 +143,7 @@ class _ChestPageState extends State<ChestPage> {
   @override
   Widget build(BuildContext context) {
     return ListenableBuilder(
-      listenable: Listenable.merge([chestController, dateTimeNow]),
+      listenable: Listenable.merge([chestController, currentTimeNotifier]),
       builder: (context, _) {
         return Column(
           children: [
@@ -168,14 +170,14 @@ class _ChestPageState extends State<ChestPage> {
                     itemCount: chestController.value.length,
                     itemBuilder: (BuildContext context, int index) {
                       final chest = chestController.value[index];
-                      final duration =
-                          dateTimeNow.value.difference(chest.openDate);
+                      final timeSinceChestCreated =
+                          currentTimeNotifier.value.difference(chest.openDate);
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           Column(
                             children: [
-                              showChestImage(chest),
+                              buildChestImage(chest),
                               Text(
                                 chest.rarity.label,
                                 style: const TextStyle(fontSize: 20),
@@ -183,7 +185,8 @@ class _ChestPageState extends State<ChestPage> {
                             ],
                           ),
                           const SizedBox(width: 16),
-                          openChestTimer(chest, duration, context),
+                          buildChestOpener(
+                              chest, timeSinceChestCreated, context),
                         ],
                       );
                     },

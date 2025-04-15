@@ -18,6 +18,12 @@ class UpgradeRepositoryImpl implements UpgradeRepository {
         description: "Aumenta a quantidade de Dust gerada por click em um",
         cost: 10,
         dustPerClickBonus: 1),
+    Upgrade(
+        name: "Tesouro Estelar",
+        description:
+            "Melhora sua chance de ganhar tesouros clicando nas estrelas",
+        cost: 10,
+        chestChanceBonus: 1),
   ];
 
   @override
