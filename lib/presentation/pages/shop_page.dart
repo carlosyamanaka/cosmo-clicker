@@ -103,13 +103,14 @@ class UpgradeTile extends StatelessWidget {
         icon: const Icon(Icons.shopping_cart),
         onPressed: () async {
           final dust = await dustController.getDust();
-
           if (dust.amount >= upgrade.cost) {
             await upgradeController.buyUpgradeItem(upgrade);
+            if (!context.mounted) return;
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('Upgrade comprado com sucesso!')),
             );
           } else {
+            if (!context.mounted) return;
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('Poeira Estelar insuficiente.')),
             );

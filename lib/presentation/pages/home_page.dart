@@ -16,7 +16,7 @@ class _HomePageState extends State<HomePage> {
   final PageController _pageController = PageController();
   int _selectedIndex = 0;
 
-  final List<int> _showAppBarFor = [0, 2];
+  final List<int> _showAppBarFor = [0, 1, 2];
 
   void _onItemTapped(int index) {
     setState(() {

@@ -9,12 +9,8 @@ enum ChestRarity {
 }
 
 enum ChestType {
-  dust('Dust'),
-  powerUp('Power up');
-
-  final String label;
-
-  const ChestType(this.label);
+  dust,
+  boss;
 }
 
 class Chest {

@@ -12,7 +12,7 @@ class ParticlePainter extends CustomPainter {
     for (final particle in particles) {
       final double opacity = max(0, particle.lifetime);
       final paint = Paint()
-        ..color = particle.color.withValues(alpha: opacity)
+        ..color = particle.color.withOpacity(opacity)
         ..strokeWidth = particle.size
         ..strokeCap = StrokeCap.round;
 
