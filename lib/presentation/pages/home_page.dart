@@ -13,23 +13,16 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final PageController _pageController = PageController();
   int _selectedIndex = 0;
 
   final List<int> _showAppBarFor = [0, 1, 2];
+  final List<Widget> _pages = const [
+    MainPage(),
+    ShopPage(),
+    ChestPage(),
+  ];
 
   void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-    _pageController.animateToPage(
-      index,
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-    );
-  }
-
-  void _onPageChanged(int index) {
     setState(() {
       _selectedIndex = index;
     });
@@ -41,11 +34,15 @@ class _HomePageState extends State<HomePage> {
       appBar: _showAppBarFor.contains(_selectedIndex)
           ? CustomAppBar(title: 'Cosmo Clicker')
           : null,
-      body: PageView(
-        controller: _pageController,
-        onPageChanged: _onPageChanged,
-        physics: const NeverScrollableScrollPhysics(),
-        children: const [MainPage(), ShopPage(), ChestPage()],
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 300),
+        transitionBuilder: (Widget child, Animation<double> animation) {
+          return FadeTransition(
+            opacity: animation,
+            child: child,
+          );
+        },
+        child: _pages[_selectedIndex],
       ),
       bottomNavigationBar: BottomNavBar(
         selectedIndex: _selectedIndex,

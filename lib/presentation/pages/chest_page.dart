@@ -39,14 +39,16 @@ class _ChestPageState extends State<ChestPage> {
   }
 
   Widget buildChestImage(chest) {
-    switch (chest.type) {
-      case ChestType.dust:
+    switch (chest.rarity) {
+      case ChestRarity.common:
+      case ChestRarity.rare:
+      case ChestRarity.stellar:
         return const Image(
           image: AssetImage('assets/images/dust_chest.png'),
           height: 100,
           alignment: Alignment.topLeft,
         );
-      case ChestType.boss:
+      case ChestRarity.boss:
         return const Image(
           image: AssetImage('assets/images/boss_chest.png'),
           fit: BoxFit.contain,
@@ -151,9 +153,10 @@ class _ChestPageState extends State<ChestPage> {
               child: InkWell(
                 onTap: () {
                   chestController.addChest(Chest(
-                      dropDate: DateTime.now(),
-                      rarity: ChestRarity.rare,
-                      type: ChestType.dust));
+                    dropDate: DateTime.now(),
+                    openDate: DateTime.now().add(const Duration(minutes: 5)),
+                    rarity: ChestRarity.rare,
+                  ));
                 },
                 child: const Image(
                   image: AssetImage('assets/images/estrela.png'),
@@ -170,8 +173,7 @@ class _ChestPageState extends State<ChestPage> {
                     itemBuilder: (BuildContext context, int index) {
                       final chest = chestController.value[index];
                       final remainingTimeToChestOpen =
-                          (chest.dropDate.add(const Duration(minutes: 3)))
-                              .difference(currentTimeNotifier.value);
+                          chest.openDate.difference(currentTimeNotifier.value);
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
