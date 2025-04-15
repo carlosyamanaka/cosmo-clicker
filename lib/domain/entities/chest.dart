@@ -14,19 +14,19 @@ enum ChestType {
 }
 
 class Chest {
-  final DateTime openDate;
+  final DateTime dropDate;
   final ChestRarity rarity;
   final ChestType type;
 
   Chest({
-    required this.openDate,
+    required this.dropDate,
     required this.rarity,
     required this.type,
   });
 
   Map<String, dynamic> toJson() {
     return {
-      'openDate': openDate.toIso8601String(),
+      'dropDate': dropDate.toIso8601String(),
       'rarity': rarity.name,
       'type': type.name,
     };
@@ -34,7 +34,7 @@ class Chest {
 
   factory Chest.fromJson(Map<String, dynamic> json) {
     return Chest(
-      openDate: DateTime.parse(json['openDate']),
+      dropDate: DateTime.parse(json['dropDate']),
       rarity: ChestRarity.values.byName(json['rarity']),
       type: ChestType.values.byName(json['type']),
     );

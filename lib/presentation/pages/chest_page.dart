@@ -66,8 +66,7 @@ class _ChestPageState extends State<ChestPage> {
   }
 
   Widget buildChestOpener(
-      Chest chest, Duration duration, BuildContext context) {
-    final remainingTime = const Duration(hours: 1) - duration;
+      Chest chest, Duration remainingTime, BuildContext context) {
     if (remainingTime <= Duration.zero) {
       return InkWell(
         child: const Text(
@@ -96,7 +95,7 @@ class _ChestPageState extends State<ChestPage> {
           );
 
           final dust = await generateChestReward();
-          chestController.removeChest(chest);
+          chestController.openChest(chest);
           if (!context.mounted) return;
           Navigator.of(context).pop();
 
@@ -152,7 +151,7 @@ class _ChestPageState extends State<ChestPage> {
               child: InkWell(
                 onTap: () {
                   chestController.addChest(Chest(
-                      openDate: DateTime.now(),
+                      dropDate: DateTime.now(),
                       rarity: ChestRarity.rare,
                       type: ChestType.dust));
                 },
@@ -170,8 +169,9 @@ class _ChestPageState extends State<ChestPage> {
                     itemCount: chestController.value.length,
                     itemBuilder: (BuildContext context, int index) {
                       final chest = chestController.value[index];
-                      final timeSinceChestCreated =
-                          currentTimeNotifier.value.difference(chest.openDate);
+                      final remainingTimeToChestOpen =
+                          (chest.dropDate.add(const Duration(minutes: 3)))
+                              .difference(currentTimeNotifier.value);
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
@@ -186,7 +186,7 @@ class _ChestPageState extends State<ChestPage> {
                           ),
                           const SizedBox(width: 16),
                           buildChestOpener(
-                              chest, timeSinceChestCreated, context),
+                              chest, remainingTimeToChestOpen, context),
                         ],
                       );
                     },

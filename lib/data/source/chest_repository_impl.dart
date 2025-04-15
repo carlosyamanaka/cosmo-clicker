@@ -17,4 +17,9 @@ class ChestRepositoryImpl implements ChestRepository {
   Future<void> saveChest(Chest chest) async {
     await localDataSource.saveChest(chest);
   }
+
+  @override
+  Future<void> removeChest(Chest chest) async {
+    await localDataSource.removeChest(chest);
+  }
 }

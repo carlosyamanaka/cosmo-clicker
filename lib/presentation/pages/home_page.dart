@@ -44,6 +44,7 @@ class _HomePageState extends State<HomePage> {
       body: PageView(
         controller: _pageController,
         onPageChanged: _onPageChanged,
+        physics: const NeverScrollableScrollPhysics(),
         children: const [MainPage(), ShopPage(), ChestPage()],
       ),
       bottomNavigationBar: BottomNavBar(

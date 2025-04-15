@@ -12,6 +12,7 @@ import 'package:cosmo_clicker/domain/usecases/buy_upgrade.dart';
 import 'package:cosmo_clicker/domain/usecases/get_available_upgrades.dart';
 import 'package:cosmo_clicker/domain/usecases/get_chests.dart';
 import 'package:cosmo_clicker/domain/usecases/get_stats.dart';
+import 'package:cosmo_clicker/domain/usecases/remove_chest.dart';
 import 'package:cosmo_clicker/domain/usecases/save_chest.dart';
 import 'package:cosmo_clicker/domain/usecases/update_stats.dart';
 import 'package:cosmo_clicker/presentation/controllers/chest_controller.dart';
@@ -72,6 +73,8 @@ void setupLocator() {
       () => GetChests(locator<ChestRepository>()));
   locator.registerLazySingleton<SaveChest>(
       () => SaveChest(locator<ChestRepository>()));
+  locator.registerLazySingleton<RemoveChest>(
+      () => RemoveChest(locator<ChestRepository>()));
 
   // Controller
   locator.registerLazySingleton<DustController>(
@@ -87,6 +90,6 @@ void setupLocator() {
         locator<StatsController>(),
       ));
 
-  locator.registerLazySingleton<ChestController>(
-      () => ChestController(locator<GetChests>(), locator<SaveChest>()));
+  locator.registerLazySingleton<ChestController>(() => ChestController(
+      locator<GetChests>(), locator<SaveChest>(), locator<RemoveChest>()));
 }
