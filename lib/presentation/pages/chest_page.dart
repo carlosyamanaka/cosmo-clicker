@@ -51,6 +51,7 @@ class _ChestPageState extends State<ChestPage> {
       case ChestRarity.boss:
         return const Image(
           image: AssetImage('assets/images/boss_chest.png'),
+          height: 100,
           fit: BoxFit.contain,
         );
       default:
@@ -148,22 +149,6 @@ class _ChestPageState extends State<ChestPage> {
       builder: (context, _) {
         return Column(
           children: [
-            SizedBox(
-              width: 100,
-              child: InkWell(
-                onTap: () {
-                  chestController.addChest(Chest(
-                    dropDate: DateTime.now(),
-                    openDate: DateTime.now().add(const Duration(minutes: 5)),
-                    rarity: ChestRarity.rare,
-                  ));
-                },
-                child: const Image(
-                  image: AssetImage('assets/images/estrela.png'),
-                  fit: BoxFit.contain,
-                ),
-              ),
-            ),
             Expanded(
               child: Stack(
                 fit: StackFit.expand,

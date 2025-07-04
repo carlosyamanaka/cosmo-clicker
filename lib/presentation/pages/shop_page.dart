@@ -4,6 +4,7 @@ import 'package:cosmo_clicker/domain/entities/upgrade.dart';
 import 'package:cosmo_clicker/presentation/controllers/upgrade_controller.dart';
 import 'package:cosmo_clicker/presentation/controllers/stats_controller.dart';
 import 'package:get_it/get_it.dart';
+import 'package:cosmo_clicker/core/utils/format_number.dart';
 
 class ShopPage extends StatefulWidget {
   const ShopPage({super.key});
@@ -28,38 +29,24 @@ class _ShopPageState extends State<ShopPage> {
   @override
   Widget build(BuildContext context) {
     return ListenableBuilder(
-        listenable: upgradeController,
-        builder: (context, _) {
-          return FutureBuilder<List<Upgrade>>(
-            future: Future.value(upgradeController.getAvailableUpgrades()),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              }
-
-              if (snapshot.hasError) {
-                return Center(child: Text('Erro: ${snapshot.error}'));
-              }
-
-              if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                return const Center(child: Text('Nenhum upgrade disponível.'));
-              }
-
-              final upgrades = snapshot.data!;
-
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  children: [
-                    UpgradeList(upgrades: upgrades),
-                    const SizedBox(height: 16),
-                    AutoClickToggle(statsController: statsController),
-                  ],
-                ),
-              );
-            },
-          );
-        });
+      listenable: upgradeController,
+      builder: (context, _) {
+        final upgrades = upgradeController.value;
+        if (upgrades.isEmpty) {
+          return const Center(child: Text('Nenhum upgrade disponível.'));
+        }
+        return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              UpgradeList(upgrades: upgrades),
+              const SizedBox(height: 16),
+              AutoClickToggle(statsController: statsController),
+            ],
+          ),
+        );
+      },
+    );
   }
 }
 
@@ -96,7 +83,7 @@ class UpgradeTile extends StatelessWidget {
         children: [
           Text(upgrade.description),
           const SizedBox(height: 4),
-          Text('Custo: ${upgrade.cost} Poeira Estelar'),
+          Text('Custo: ${formatNumber(upgrade.cost)} Poeira Estelar'),
           const Divider(),
         ],
       ),

@@ -5,13 +5,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 abstract class UpgradeLocalDataSource {
   Future<void> saveStats(Stats stats);
   Future<void> buyUpgrade(Upgrade upgrade);
+  Future<int> getUpgradeLevel(String upgradeName);
 }
 
 class UpgradeLocalDataSourceImpl implements UpgradeLocalDataSource {
   static const _dustPerClickKey = 'dustPerClick';
   static const _dustPerSecondKey = 'dustPerSecond';
-
-  static const _key = 'upgrade';
 
   @override
   Future<void> saveStats(stats) async {
@@ -21,8 +20,14 @@ class UpgradeLocalDataSourceImpl implements UpgradeLocalDataSource {
   }
 
   @override
-  Future<void> buyUpgrade(upgrade) async {
+  Future<void> buyUpgrade(Upgrade upgrade) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_key, upgrade.name);
+    await prefs.setInt('upgrade_${upgrade.name}_level', upgrade.level);
+  }
+
+  @override
+  Future<int> getUpgradeLevel(String upgradeName) async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getInt('upgrade_${upgradeName}_level') ?? 1;
   }
 }

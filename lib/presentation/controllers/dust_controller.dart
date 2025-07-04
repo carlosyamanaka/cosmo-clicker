@@ -15,6 +15,12 @@ class DustController extends ValueNotifier<int> {
     value = dust.amount;
   }
 
+  Future<void> loadDust() async {
+    final dust = await getDust();
+    value = dust.amount;
+    notifyListeners();
+  }
+
   void addDust(int amount) {
     value += amount;
     updateDust(value);

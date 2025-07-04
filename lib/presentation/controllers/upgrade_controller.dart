@@ -1,9 +1,11 @@
+import 'package:cosmo_clicker/presentation/controllers/chest_controller.dart';
 import 'package:cosmo_clicker/presentation/controllers/dust_controller.dart';
 import 'package:cosmo_clicker/presentation/controllers/stats_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:cosmo_clicker/domain/entities/upgrade.dart';
 import 'package:cosmo_clicker/domain/usecases/get_available_upgrades.dart';
 import 'package:cosmo_clicker/domain/usecases/buy_upgrade.dart';
+import 'package:cosmo_clicker/domain/usecases/save_chest_probability.dart';
 
 class UpgradeController extends ValueNotifier<List<Upgrade>> {
   final GetAvailableUpgrades getAvailableUpgrades;
@@ -11,12 +13,16 @@ class UpgradeController extends ValueNotifier<List<Upgrade>> {
 
   final DustController dustController;
   final StatsController statsController;
+  final ChestController chestController;
+  final SaveChestProbability saveChestProbability;
 
   UpgradeController(
     this.getAvailableUpgrades,
     this.buyUpgrade,
     this.dustController,
     this.statsController,
+    this.chestController,
+    this.saveChestProbability,
   ) : super([]) {
     _loadAvailableUpgrades();
   }
@@ -26,18 +32,15 @@ class UpgradeController extends ValueNotifier<List<Upgrade>> {
     value = upgrades;
   }
 
+  @override
   Future<void> buyUpgradeItem(Upgrade upgrade) async {
     try {
-      if (dustController.value >= upgrade.cost) {
-        statsController.upgradeDustPerClick(upgrade.dustPerClickBonus);
-
-        dustController.removeDust(upgrade.cost);
-      } else {
-        throw Exception('Poeira Estelar insuficiente!');
-      }
-
       await buyUpgrade(upgrade);
-      _loadAvailableUpgrades();
+      await statsController.loadStats();
+      await dustController.loadDust();
+      await chestController.reloadDropProbability();
+      await _loadAvailableUpgrades();
+      notifyListeners();
     } catch (e) {
       throw Exception('Erro ao comprar upgrade: $e');
     }
