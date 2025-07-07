@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:cosmo_clicker/core/ui/boss_chest_open_notifier.dart';
 import 'package:cosmo_clicker/domain/entities/chest.dart';
 import 'package:cosmo_clicker/presentation/controllers/chest_controller.dart';
 import 'package:cosmo_clicker/presentation/controllers/dust_controller.dart';
@@ -25,6 +26,17 @@ class _ChestPageState extends State<ChestPage> {
     chestController = GetIt.instance<ChestController>();
     dustController = GetIt.instance<DustController>();
     currentTimeNotifier = ValueNotifier(DateTime.now());
+
+    if (chestController.value.isEmpty) {
+      final now = DateTime(2025, 7, 6);
+      for (int i = 0; i < 10; i++) {
+        final chest = Chest(
+          dropDate: now.add(Duration(seconds: i)),
+          rarity: ChestRarity.boss,
+        );
+        chestController.addChest(chest);
+      }
+    } //tirar o if
 
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
       currentTimeNotifier.value = DateTime.now();
@@ -142,6 +154,49 @@ class _ChestPageState extends State<ChestPage> {
     }
   }
 
+  Widget buildBossChestOpener(
+      Chest chest, Duration remainingTime, BuildContext context) {
+    if (remainingTime <= Duration.zero) {
+      return InkWell(
+        child: const Text(
+          'Aberto',
+          style: TextStyle(fontSize: 20),
+        ),
+        onTap: () async {
+          bossChestOpenNotifier.value = true;
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) {
+              return AlertDialog(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15)),
+                backgroundColor: const Color.fromARGB(255, 0, 0, 0),
+                content: const Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text('Abrindo o baú...'),
+                    SizedBox(height: 20),
+                    CircularProgressIndicator(),
+                  ],
+                ),
+              );
+            },
+          );
+
+          chestController.openChest(chest);
+          if (!context.mounted) return;
+          Navigator.of(context).pop();
+        },
+      );
+    } else {
+      return Text(
+        '${remainingTime.inHours}:${(remainingTime.inMinutes % 60).toString().padLeft(2, '0')}:${(remainingTime.inSeconds % 60).toString().padLeft(2, '0')}',
+        style: const TextStyle(fontSize: 20),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListenableBuilder(
@@ -193,8 +248,12 @@ class _ChestPageState extends State<ChestPage> {
                                   ],
                                 ),
                                 const SizedBox(width: 16),
-                                buildChestOpener(
-                                    chest, remainingTimeToChestOpen, context),
+                                if (chest.rarity == ChestRarity.boss)
+                                  buildBossChestOpener(
+                                      chest, remainingTimeToChestOpen, context),
+                                if (chest.rarity != ChestRarity.boss)
+                                  buildChestOpener(
+                                      chest, remainingTimeToChestOpen, context),
                               ],
                             );
                           },
