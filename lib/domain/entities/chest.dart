@@ -1,12 +1,13 @@
 enum ChestRarity {
-  common('Comum'),
-  rare('Raro'),
-  stellar('Estelar'),
-  boss('Boss');
+  common('Comum', Duration(seconds: 30)),
+  rare('Raro', Duration(minutes: 1)),
+  stellar('Estelar', Duration(minutes: 5)),
+  boss('Boss', Duration(minutes: 15));
 
   final String label;
+  final Duration openDelay;
 
-  const ChestRarity(this.label);
+  const ChestRarity(this.label, this.openDelay);
 }
 
 class Chest {
@@ -16,9 +17,8 @@ class Chest {
 
   Chest({
     required this.dropDate,
-    required this.openDate,
     required this.rarity,
-  });
+  }) : openDate = dropDate.add(rarity.openDelay);
 
   Map<String, dynamic> toJson() {
     return {
@@ -29,10 +29,11 @@ class Chest {
   }
 
   factory Chest.fromJson(Map<String, dynamic> json) {
+    final rarity = ChestRarity.values.byName(json['rarity']);
+    final dropDate = DateTime.parse(json['dropDate']);
     return Chest(
-      dropDate: DateTime.parse(json['dropDate']),
-      openDate: DateTime.parse(json['dropDate']),
-      rarity: ChestRarity.values.byName(json['rarity']),
+      dropDate: dropDate,
+      rarity: rarity,
     );
   }
 }

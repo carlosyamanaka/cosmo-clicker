@@ -147,44 +147,65 @@ class _ChestPageState extends State<ChestPage> {
     return ListenableBuilder(
       listenable: Listenable.merge([chestController, currentTimeNotifier]),
       builder: (context, _) {
+        final isEmpty = chestController.value.isEmpty;
         return Column(
           children: [
             Expanded(
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  ListView.separated(
-                    itemCount: chestController.value.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final chest = chestController.value[index];
-                      final remainingTimeToChestOpen =
-                          chest.openDate.difference(currentTimeNotifier.value);
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+              child: isEmpty
+                  ? Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Column(
-                            children: [
-                              buildChestImage(chest),
-                              Text(
-                                chest.rarity.label,
-                                style: const TextStyle(fontSize: 20),
-                              )
-                            ],
+                          Icon(Icons.info_outline,
+                              color: Colors.amber.shade200, size: 40),
+                          const SizedBox(height: 16),
+                          const Text(
+                            'Nenhum baú encontrado. Comece a clicar para tentar dropar um baú!',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.white70,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
-                          const SizedBox(width: 16),
-                          buildChestOpener(
-                              chest, remainingTimeToChestOpen, context),
                         ],
-                      );
-                    },
-                    separatorBuilder: (context, index) {
-                      return const SizedBox(
-                        height: 16,
-                      );
-                    },
-                  ),
-                ],
-              ),
+                      ),
+                    )
+                  : Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        ListView.separated(
+                          itemCount: chestController.value.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            final chest = chestController.value[index];
+                            final remainingTimeToChestOpen = chest.openDate
+                                .difference(currentTimeNotifier.value);
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Column(
+                                  children: [
+                                    buildChestImage(chest),
+                                    Text(
+                                      chest.rarity.label,
+                                      style: const TextStyle(fontSize: 20),
+                                    )
+                                  ],
+                                ),
+                                const SizedBox(width: 16),
+                                buildChestOpener(
+                                    chest, remainingTimeToChestOpen, context),
+                              ],
+                            );
+                          },
+                          separatorBuilder: (context, index) {
+                            return const SizedBox(
+                              height: 16,
+                            );
+                          },
+                        ),
+                      ],
+                    ),
             ),
           ],
         );

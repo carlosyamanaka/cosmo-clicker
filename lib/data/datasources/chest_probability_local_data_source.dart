@@ -18,6 +18,6 @@ class ChestProbabilityLocalDataSourceImpl
   @override
   Future<double> getProbability() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getDouble(_probabilityKey) ?? 0.1;
+    return prefs.getDouble(_probabilityKey) ?? 0.01;
   }
 }

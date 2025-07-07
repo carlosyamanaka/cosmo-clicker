@@ -76,9 +76,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   const Spacer(),
                   Icon(Icons.casino, color: Colors.amber.shade200, size: 18),
                   const SizedBox(width: 4),
-                  const Text('Chance Baú:',
-                      style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold)),
+                  const Text(
+                    'Chance Baú:',
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
                   const SizedBox(width: 4),
                   ValueListenableBuilder<double>(
                     valueListenable: chestController.dropProbability,

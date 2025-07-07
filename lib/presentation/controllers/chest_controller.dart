@@ -92,7 +92,6 @@ class ChestController extends ValueNotifier<List<Chest>> {
       }
       final chest = Chest(
         dropDate: DateTime.now(),
-        openDate: DateTime.now(),
         rarity: rarity,
       );
       await addChest(chest);

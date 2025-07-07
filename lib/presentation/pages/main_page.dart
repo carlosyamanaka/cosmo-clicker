@@ -2,8 +2,11 @@ import 'package:cosmo_clicker/core/ui/animations/particle_explosion.dart';
 import 'package:cosmo_clicker/presentation/controllers/chest_controller.dart';
 import 'package:cosmo_clicker/presentation/controllers/dust_controller.dart';
 import 'package:cosmo_clicker/presentation/controllers/stats_controller.dart';
+import 'package:cosmo_clicker/presentation/controllers/upgrade_controller.dart';
+import 'package:cosmo_clicker/presentation/widgets/star_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:cosmo_clicker/domain/entities/upgrade.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -19,6 +22,7 @@ class _MainPageState extends State<MainPage> {
   late final DustController dustController;
   late final StatsController statsController;
   late final ChestController chestController;
+  late final UpgradeController upgradeController;
 
   late final bool _autoClickActive;
 
@@ -30,6 +34,7 @@ class _MainPageState extends State<MainPage> {
     dustController = GetIt.instance<DustController>();
     statsController = GetIt.instance<StatsController>();
     chestController = GetIt.instance<ChestController>();
+    upgradeController = GetIt.instance<UpgradeController>();
     _autoClickActive = statsController.value.autoClickActive;
   }
 
@@ -91,6 +96,27 @@ class _MainPageState extends State<MainPage> {
                                       'assets/images/cosmo_main.jpg'),
                                   fit: BoxFit.cover,
                                 ),
+                              ),
+                              LayoutBuilder(
+                                builder: (context, constraints) {
+                                  return ValueListenableBuilder<List<Upgrade>>(
+                                    valueListenable: upgradeController,
+                                    builder: (context, upgrades, _) {
+                                      final starUpgrade = upgrades.firstWhere(
+                                        (u) => u.name == 'Núcleos de estrelas',
+                                        orElse: () => Upgrade(
+                                          name: 'Núcleos de estrelas',
+                                          baseCost: 0,
+                                        ),
+                                      );
+                                      return StarOverlay(
+                                        starCount: starUpgrade.level,
+                                        width: constraints.maxWidth,
+                                        height: constraints.maxHeight,
+                                      );
+                                    },
+                                  );
+                                },
                               ),
                               ValueListenableBuilder<Offset?>(
                                 valueListenable: _tapPositionNotifier,
