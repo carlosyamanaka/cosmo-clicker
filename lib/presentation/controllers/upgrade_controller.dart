@@ -32,7 +32,6 @@ class UpgradeController extends ValueNotifier<List<Upgrade>> {
     value = upgrades;
   }
 
-  @override
   Future<void> buyUpgradeItem(Upgrade upgrade) async {
     try {
       await buyUpgrade(upgrade);
@@ -44,5 +43,16 @@ class UpgradeController extends ValueNotifier<List<Upgrade>> {
     } catch (e) {
       throw Exception('Erro ao comprar upgrade: $e');
     }
+  }
+
+  Future<void> buyUpgradeItemMultiple(Upgrade upgrade, int quantity) async {
+    for (int i = 0; i < quantity; i++) {
+      await buyUpgrade(upgrade);
+    }
+    await statsController.loadStats();
+    await dustController.loadDust();
+    await chestController.reloadDropProbability();
+    await _loadAvailableUpgrades();
+    notifyListeners();
   }
 }

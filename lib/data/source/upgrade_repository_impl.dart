@@ -26,6 +26,7 @@ class UpgradeRepositoryImpl implements UpgradeRepository {
       name: "Núcleos de estrelas",
       description: "Aumenta a quantidade de Dust gerada por click em um",
       baseCost: 50,
+      imagePath: 'assets/images/Small_Blackball_10x26.png',
       growthFactor: 1.2,
       level: 1,
       dustPerClickBonus: 1,
@@ -35,6 +36,7 @@ class UpgradeRepositoryImpl implements UpgradeRepository {
       description:
           "Melhora sua chance de ganhar tesouros clicando nas estrelas",
       baseCost: 1000,
+      imagePath: 'assets/images/stellar_treasure_chest_sprite_10x26.png',
       growthFactor: 2.0,
       level: 1,
       chestChanceBonus: 1,

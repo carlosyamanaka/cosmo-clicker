@@ -5,6 +5,7 @@ class Upgrade {
   final String name;
   final String description;
   final int baseCost;
+  final String imagePath;
   final double growthFactor;
   final int level;
   final int dustPerClickBonus;
@@ -15,6 +16,7 @@ class Upgrade {
     required this.name,
     this.description = "",
     required this.baseCost,
+    this.imagePath = "assets/images/stellar_treasure_chest_sprite_10x26.png",
     this.growthFactor = 1.2,
     this.level = 1,
     this.dustPerClickBonus = 0,
@@ -29,6 +31,7 @@ class Upgrade {
       name: name,
       description: description,
       baseCost: baseCost,
+      imagePath: imagePath,
       growthFactor: growthFactor,
       level: level ?? this.level,
       dustPerClickBonus: dustPerClickBonus,

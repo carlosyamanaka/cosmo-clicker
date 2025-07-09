@@ -29,6 +29,7 @@ class SpriteAnimationWidget extends StatefulWidget {
 class _SpriteAnimationWidgetState extends State<SpriteAnimationWidget> {
   late Timer _timer;
   int _currentFrame = 0;
+  bool _reverse = false;
   ImageStream? _imageStream;
   ImageInfo? _imageInfo;
 
@@ -37,7 +38,19 @@ class _SpriteAnimationWidgetState extends State<SpriteAnimationWidget> {
     super.initState();
     _timer = Timer.periodic(widget.frameDuration, (_) {
       setState(() {
-        _currentFrame = (_currentFrame + 1) % widget.frameCount;
+        if (!_reverse) {
+          _currentFrame++;
+          if (_currentFrame >= widget.frameCount - 1) {
+            _currentFrame = widget.frameCount - 1;
+            _reverse = true;
+          }
+        } else {
+          _currentFrame--;
+          if (_currentFrame <= 0) {
+            _currentFrame = 0;
+            _reverse = false;
+          }
+        }
       });
     });
     _resolveImage();

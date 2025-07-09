@@ -83,7 +83,7 @@ class ChestController extends ValueNotifier<List<Chest>> {
       ChestRarity rarity;
       _chestsSinceLastBoss++;
       await saveChestCounter(_chestsSinceLastBoss);
-      if (_chestsSinceLastBoss >= 25) {
+      if (_chestsSinceLastBoss >= 75) {
         rarity = ChestRarity.boss;
         _chestsSinceLastBoss = 0;
         await saveChestCounter(_chestsSinceLastBoss);

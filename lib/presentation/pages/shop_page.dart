@@ -40,71 +40,28 @@ class _ShopPageState extends State<ShopPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return Column(
       children: [
-        Positioned.fill(
-          child: Image.asset(
-            'assets/images/shop_bg.png',
-            fit: BoxFit.cover,
+        Expanded(
+          child: ListenableBuilder(
+            listenable: upgradeController,
+            builder: (context, _) {
+              final upgrades = upgradeController.value;
+              if (upgrades.isEmpty) {
+                return const Center(
+                    child: Text('Nenhum upgrade disponível.',
+                        style: TextStyle(color: Colors.white)));
+              }
+              return Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: UpgradeList(upgrades: upgrades, onBuy: _loadDust),
+              );
+            },
           ),
         ),
-        Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
-              decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.5),
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(24),
-                  bottomRight: Radius.circular(24),
-                ),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Image.asset(
-                        'assets/images/dust_chest.png',
-                        width: 32,
-                        height: 32,
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        formatNumber(dustAmount),
-                        style: const TextStyle(
-                          fontSize: 22,
-                          color: Colors.yellow,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: ListenableBuilder(
-                listenable: upgradeController,
-                builder: (context, _) {
-                  final upgrades = upgradeController.value;
-                  if (upgrades.isEmpty) {
-                    return const Center(
-                        child: Text('Nenhum upgrade disponível.',
-                            style: TextStyle(color: Colors.white)));
-                  }
-                  return Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: UpgradeList(upgrades: upgrades, onBuy: _loadDust),
-                  );
-                },
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 16),
-              child: AutoClickToggle(statsController: statsController),
-            ),
-          ],
+        Padding(
+          padding: const EdgeInsets.only(bottom: 16),
+          child: AutoClickToggle(statsController: statsController),
         ),
       ],
     );
@@ -183,11 +140,11 @@ class UpgradeTile extends StatelessWidget {
                   Row(
                     children: [
                       Image.asset(
-                        'assets/images/dust_chest.png',
+                        'assets/images/dust.png',
                         width: 20,
                         height: 20,
                       ),
-                      const SizedBox(width: 4),
+                      const SizedBox(width: 8),
                       Text(
                         formatNumber(upgrade.cost),
                         style: const TextStyle(

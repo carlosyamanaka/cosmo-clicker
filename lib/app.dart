@@ -7,7 +7,7 @@ class CosmoClickerApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Star Clicker',
+      title: 'Cosmo Clicker',
       theme: ThemeData.dark(),
       debugShowCheckedModeBanner: false,
       home: const HomePage(),

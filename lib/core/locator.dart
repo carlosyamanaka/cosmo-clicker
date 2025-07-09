@@ -21,9 +21,11 @@ import 'package:cosmo_clicker/domain/usecases/remove_chest.dart';
 import 'package:cosmo_clicker/domain/usecases/save_chest.dart';
 import 'package:cosmo_clicker/domain/usecases/save_chest_counter.dart';
 import 'package:cosmo_clicker/domain/usecases/update_stats.dart';
+import 'package:cosmo_clicker/presentation/controllers/boss_controller.dart';
 import 'package:cosmo_clicker/presentation/controllers/chest_controller.dart';
 import 'package:cosmo_clicker/presentation/controllers/stats_controller.dart';
 import 'package:cosmo_clicker/presentation/controllers/upgrade_controller.dart';
+import 'package:cosmo_clicker/presentation/controllers/trophy_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import '../data/datasources/dust_local_data_source.dart';
@@ -148,4 +150,7 @@ void setupLocator() {
         locator<GetChestProbability>(),
         locator<SaveChestProbability>(),
       ));
+
+  locator.registerLazySingleton<BossController>(() => BossController());
+  locator.registerLazySingleton<TrophyController>(() => TrophyController());
 }

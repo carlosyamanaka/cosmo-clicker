@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:cosmo_clicker/core/ui/animations/particle_explosion.dart';
 import 'package:cosmo_clicker/presentation/controllers/chest_controller.dart';
 import 'package:cosmo_clicker/presentation/controllers/dust_controller.dart';
@@ -28,7 +26,6 @@ class _MainPageState extends State<MainPage> {
   late final UpgradeController upgradeController;
 
   late final bool _autoClickActive;
-
   int _shouldAutoClick = 0;
 
   @override
@@ -79,17 +76,6 @@ class _MainPageState extends State<MainPage> {
                         child: Stack(
                           alignment: Alignment.center,
                           children: [
-                            if (bossOpen)
-                              Positioned.fill(
-                                child: BackdropFilter(
-                                  filter: ImageFilter.blur(
-                                    sigmaX: 10,
-                                    sigmaY: 18,
-                                    tileMode: TileMode.clamp,
-                                  ),
-                                  child: Container(color: Colors.transparent),
-                                ),
-                              ),
                             ListenableBuilder(
                               listenable: Listenable.merge(
                                   [dustController, statsController]),
@@ -195,22 +181,6 @@ class _MainPageState extends State<MainPage> {
                 );
               },
             ),
-            if (bossOpen)
-              Positioned(
-                left: 0,
-                right: 0,
-                bottom: 0,
-                child: LayoutBuilder(
-                  builder: (context, constraints) {
-                    return Center(
-                      child: Image(
-                        image: const AssetImage('assets/images/boss.png'),
-                        width: constraints.maxWidth * 0.5,
-                      ),
-                    );
-                  },
-                ),
-              ),
           ],
         );
       },

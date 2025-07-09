@@ -4,6 +4,8 @@ import 'package:cosmo_clicker/core/ui/boss_chest_open_notifier.dart';
 import 'package:cosmo_clicker/domain/entities/chest.dart';
 import 'package:cosmo_clicker/presentation/controllers/chest_controller.dart';
 import 'package:cosmo_clicker/presentation/controllers/dust_controller.dart';
+import 'package:cosmo_clicker/presentation/controllers/stats_controller.dart';
+import 'package:cosmo_clicker/presentation/pages/boss_battle_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
@@ -18,6 +20,7 @@ class _ChestPageState extends State<ChestPage> {
   late final ChestController chestController;
   late final DustController dustController;
   late final ValueNotifier<DateTime> currentTimeNotifier;
+  late final StatsController statsController;
   Timer? _timer;
 
   @override
@@ -25,6 +28,7 @@ class _ChestPageState extends State<ChestPage> {
     super.initState();
     chestController = GetIt.instance<ChestController>();
     dustController = GetIt.instance<DustController>();
+    statsController = GetIt.instance<StatsController>();
     currentTimeNotifier = ValueNotifier(DateTime.now());
 
     if (chestController.value.isEmpty) {
@@ -73,7 +77,9 @@ class _ChestPageState extends State<ChestPage> {
 
   Future<int> generateChestReward() async {
     final random = Random();
-    final int dust = 50 + random.nextInt(151);
+    final dustPerClick = statsController.value.dustPerClick;
+    final int dust = (dustPerClick * (2 + random.nextInt(5))) +
+        random.nextInt(dustPerClick + 3);
     Future.delayed(const Duration(seconds: 1), () {
       dustController.addDust(dust);
     });
@@ -163,7 +169,6 @@ class _ChestPageState extends State<ChestPage> {
           style: TextStyle(fontSize: 20),
         ),
         onTap: () async {
-          bossChestOpenNotifier.value = true;
           showDialog(
             context: context,
             barrierDismissible: false,
@@ -172,21 +177,52 @@ class _ChestPageState extends State<ChestPage> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15)),
                 backgroundColor: const Color.fromARGB(255, 0, 0, 0),
-                content: const Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text('Abrindo o baú...'),
-                    SizedBox(height: 20),
-                    CircularProgressIndicator(),
-                  ],
-                ),
+                title: const Text('Enfrentar o Boss?'),
+                content: const Text(
+                    'Tem certeza que deseja ir enfrentar o boss? Após isso não terá volta!'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: const Text('Cancelar'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      bossChestOpenNotifier.value = true;
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (context) {
+                          return AlertDialog(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15)),
+                            backgroundColor: const Color.fromARGB(255, 0, 0, 0),
+                            content: const Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text('Abrindo o baú...'),
+                                SizedBox(height: 20),
+                                CircularProgressIndicator(),
+                              ],
+                            ),
+                          );
+                        },
+                      );
+                      chestController.openChest(chest);
+                      if (!context.mounted) return;
+                      Navigator.of(context).pop();
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => const BossBattlePage(),
+                        ),
+                      );
+                    },
+                    child: const Text('Enfrentar'),
+                  ),
+                ],
               );
             },
           );
-
-          chestController.openChest(chest);
-          if (!context.mounted) return;
-          Navigator.of(context).pop();
         },
       );
     } else {
