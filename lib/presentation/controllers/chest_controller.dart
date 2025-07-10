@@ -9,6 +9,7 @@ import 'package:cosmo_clicker/domain/usecases/save_chest_counter.dart';
 import 'package:cosmo_clicker/domain/usecases/get_chest_probability.dart';
 import 'package:cosmo_clicker/domain/usecases/save_chest_probability.dart';
 import 'package:cosmo_clicker/presentation/controllers/dust_controller.dart';
+import 'package:cosmo_clicker/presentation/controllers/stats_controller.dart';
 import 'package:flutter/material.dart';
 
 class ChestController extends ValueNotifier<List<Chest>> {
@@ -21,6 +22,7 @@ class ChestController extends ValueNotifier<List<Chest>> {
   final GetChestProbability getChestProbability;
   final SaveChestProbability saveChestProbability;
   final DustController dustController;
+  final StatsController statsController;
   ValueNotifier<double> dropProbability;
   int _chestsSinceLastBoss = 0;
   final Random _random = Random();
@@ -36,6 +38,7 @@ class ChestController extends ValueNotifier<List<Chest>> {
     this.getChestProbability,
     this.saveChestProbability,
     this.dustController,
+    this.statsController,
   ) : super([]) {
     loadChests();
     _loadChestCounter();
@@ -114,14 +117,13 @@ class ChestController extends ValueNotifier<List<Chest>> {
       case ChestRarity.stellar:
         dust = 200 + random.nextInt(101);
         break;
-      case ChestRarity.boss:
-        dust = 400 + random.nextInt(201);
-        break;
       default:
         dust = 50;
     }
+    final dustPerClick = statsController.value.dustPerClick;
+    final totalDust = (dust * dustPerClick).ceil();
     await Future.delayed(const Duration(seconds: 1));
-    dustController.addDust(dust);
-    return dust;
+    dustController.addDust(totalDust);
+    return totalDust;
   }
 }

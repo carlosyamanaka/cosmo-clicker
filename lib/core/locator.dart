@@ -150,6 +150,7 @@ void setupLocator() {
         locator<GetChestProbability>(),
         locator<SaveChestProbability>(),
         locator<DustController>(),
+        locator<StatsController>(),
       ));
 
   locator.registerLazySingleton<BossController>(
