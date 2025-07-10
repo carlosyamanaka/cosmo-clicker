@@ -48,34 +48,31 @@ class _ParticleExplosionState extends State<ParticleExplosion>
 
   void _generateParticles(Offset tapPosition) {
     final random = Random();
-    int particleNumberGenerate = 15;
+    int particleNumberGenerate = 11;
 
     if (_particles.length > _maxParticles) {
-      particleNumberGenerate = 7;
+      particleNumberGenerate = 5;
     }
 
     double generateValidDirection(Random random) {
       double direction = random.nextDouble() * 2 * pi;
-
-      // Se tiver entre 265 e 275 graus, joga pra baixo
       if (direction > 265 * pi / 180 && direction < 275 * pi / 180) {
         direction += pi;
       }
-
       return direction;
     }
 
     List<Particle> newParticles = List.generate(particleNumberGenerate, (_) {
       final direction = generateValidDirection(random);
       final speed = random.nextDouble() * 2 + 1;
-      final gravity = Offset(0, random.nextDouble() * 0.1);
-      final size = random.nextDouble() * 2 + 1;
+      final gravity = Offset(0, random.nextDouble() * 0.1 * 0.2);
+      final size = random.nextDouble() * 1.5 + 0.7;
 
       return Particle(
         position: tapPosition,
         velocity: Offset(cos(direction) * speed, sin(direction) * speed),
         gravity: gravity,
-        color: Color.lerp(Colors.orange, Colors.yellow, random.nextDouble())!,
+        color: Colors.white,
         size: size,
         lifetime: random.nextDouble() * 0.5 + 0.4,
       );

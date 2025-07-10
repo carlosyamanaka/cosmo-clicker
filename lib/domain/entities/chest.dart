@@ -1,13 +1,50 @@
+import 'package:flutter/material.dart';
+
+import '../../core/constants/app_assets.dart';
+
 enum ChestRarity {
-  common('Comum', Duration(seconds: 30)),
-  rare('Raro', Duration(minutes: 1)),
-  stellar('Estelar', Duration(minutes: 5)),
-  boss('Boss', Duration(minutes: 15));
+  common(
+    'Comum',
+    Duration(seconds: 30),
+    Image(
+      image: AssetImage(AppAssets.commonChest),
+      height: 100,
+      fit: BoxFit.contain,
+    ),
+  ),
+  rare(
+    'Raro',
+    Duration(minutes: 1),
+    Image(
+      image: AssetImage(AppAssets.rareChest),
+      height: 100,
+      fit: BoxFit.contain,
+    ),
+  ),
+  stellar(
+    'Estelar',
+    Duration(minutes: 5),
+    Image(
+      image: AssetImage(AppAssets.stellarChest),
+      height: 100,
+      fit: BoxFit.contain,
+    ),
+  ),
+  boss(
+    'Boss',
+    Duration(minutes: 15),
+    Image(
+      image: AssetImage(AppAssets.bossChest),
+      height: 105,
+      fit: BoxFit.contain,
+    ),
+  );
 
   final String label;
   final Duration openDelay;
+  final Image image;
 
-  const ChestRarity(this.label, this.openDelay);
+  const ChestRarity(this.label, this.openDelay, this.image);
 }
 
 class Chest {

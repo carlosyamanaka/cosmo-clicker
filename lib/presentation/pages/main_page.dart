@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:cosmo_clicker/domain/entities/upgrade.dart';
 import 'package:cosmo_clicker/core/ui/boss_chest_open_notifier.dart';
+import 'package:cosmo_clicker/presentation/widgets/floating_text.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -28,6 +29,8 @@ class _MainPageState extends State<MainPage> {
   late final bool _autoClickActive;
   int _shouldAutoClick = 0;
 
+  final List<FloatingText> _floatingTexts = [];
+
   @override
   void initState() {
     super.initState();
@@ -42,6 +45,22 @@ class _MainPageState extends State<MainPage> {
     _tapPositionNotifier.value = position;
   }
 
+  void _showFloatingText(Offset position, int value) {
+    final key = UniqueKey();
+    setState(() {
+      _floatingTexts.add(FloatingText(
+        key: key,
+        position: position,
+        value: value,
+        onCompleted: () {
+          setState(() {
+            _floatingTexts.removeWhere((t) => t.key == key);
+          });
+        },
+      ));
+    });
+  }
+
   void _clickHandler(details) async {
     dustController.addDust(statsController.value.dustPerClick);
     final before = chestController.value.length;
@@ -54,6 +73,13 @@ class _MainPageState extends State<MainPage> {
       });
     }
     _updateTapPosition(details.localPosition);
+    _showFloatingText(
+      details.localPosition,
+      statsController.value.dustPerClick,
+    );
+    Future.delayed(const Duration(milliseconds: 120), () {
+      _tapPositionNotifier.value = null;
+    });
   }
 
   @override
@@ -113,10 +139,6 @@ class _MainPageState extends State<MainPage> {
                                                 (u) =>
                                                     u.name ==
                                                     'Núcleos de estrelas',
-                                                orElse: () => Upgrade(
-                                                  name: 'Núcleos de estrelas',
-                                                  baseCost: 0,
-                                                ),
                                               );
                                               return StarOverlay(
                                                 starCount: starUpgrade.level,
@@ -134,6 +156,7 @@ class _MainPageState extends State<MainPage> {
                                               tapPosition: tapPosition);
                                         },
                                       ),
+                                      ..._floatingTexts,
                                     ],
                                   ),
                                 );

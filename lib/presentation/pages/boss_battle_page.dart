@@ -1,3 +1,4 @@
+import 'package:cosmo_clicker/core/constants/app_assets.dart';
 import 'package:cosmo_clicker/presentation/controllers/boss_controller.dart';
 import 'package:cosmo_clicker/presentation/controllers/stats_controller.dart';
 import 'package:cosmo_clicker/presentation/controllers/trophy_controller.dart';
@@ -35,7 +36,7 @@ class _BossBattlePageState extends State<BossBattlePage> {
 
   void _checkBossDefeated() async {
     if (bossController.value <= 0) {
-      await trophyController.setTrophy(true);
+      await trophyController.addTrophy();
       if (mounted) {
         Navigator.of(context).popUntil((route) => route.isFirst);
         HomePage.goToTab(0);
@@ -69,7 +70,7 @@ class _BossBattlePageState extends State<BossBattlePage> {
                     bossController.damage(statsController.value.dustPerClick);
                   },
                   child: Image.asset(
-                    'assets/images/boss.png',
+                    AppAssets.boss,
                     width: MediaQuery.of(context).size.width * 0.5,
                   ),
                 ),

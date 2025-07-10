@@ -16,7 +16,7 @@ class Upgrade {
     required this.name,
     this.description = "",
     required this.baseCost,
-    this.imagePath = "assets/images/stellar_treasure_chest_sprite_10x26.png",
+    required this.imagePath,
     this.growthFactor = 1.2,
     this.level = 1,
     this.dustPerClickBonus = 0,

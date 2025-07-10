@@ -33,14 +33,36 @@ class _ChestPageState extends State<ChestPage> {
 
     if (chestController.value.isEmpty) {
       final now = DateTime(2025, 7, 6);
-      for (int i = 0; i < 10; i++) {
+      for (int i = 0; i < 3; i++) {
         final chest = Chest(
           dropDate: now.add(Duration(seconds: i)),
           rarity: ChestRarity.boss,
         );
         chestController.addChest(chest);
+        if (i == 0) {
+          chestController.addChest(
+            Chest(
+              dropDate: now.add(const Duration(seconds: 5)),
+              rarity: ChestRarity.common,
+            ),
+          );
+        } else if (i == 1) {
+          chestController.addChest(
+            Chest(
+              dropDate: now.add(const Duration(seconds: 10)),
+              rarity: ChestRarity.rare,
+            ),
+          );
+        } else if (i == 2) {
+          chestController.addChest(
+            Chest(
+              dropDate: now.add(const Duration(seconds: 15)),
+              rarity: ChestRarity.stellar,
+            ),
+          );
+        }
       }
-    } //tirar o if
+    } //TODO tirar o if
 
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
       currentTimeNotifier.value = DateTime.now();
@@ -57,19 +79,13 @@ class _ChestPageState extends State<ChestPage> {
   Widget buildChestImage(chest) {
     switch (chest.rarity) {
       case ChestRarity.common:
+        return ChestRarity.common.image;
       case ChestRarity.rare:
+        return ChestRarity.rare.image;
       case ChestRarity.stellar:
-        return const Image(
-          image: AssetImage('assets/images/dust_chest.png'),
-          height: 100,
-          alignment: Alignment.topLeft,
-        );
+        return ChestRarity.stellar.image;
       case ChestRarity.boss:
-        return const Image(
-          image: AssetImage('assets/images/boss_chest.png'),
-          height: 100,
-          fit: BoxFit.contain,
-        );
+        return ChestRarity.boss.image;
       default:
         return const SizedBox.shrink();
     }

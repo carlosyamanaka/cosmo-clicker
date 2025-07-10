@@ -97,7 +97,7 @@ class _HomePageState extends State<HomePage> {
                                         const Duration(milliseconds: 1500),
                                     curve: Curves.easeOut,
                                     child: Image.asset(
-                                      'assets/images/glitch.gif',
+                                      'assets/gifs/glitch.gif',
                                       fit: BoxFit.cover,
                                       opacity:
                                           const AlwaysStoppedAnimation(0.7),

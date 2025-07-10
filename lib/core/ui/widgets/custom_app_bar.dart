@@ -1,3 +1,4 @@
+import 'package:cosmo_clicker/core/constants/app_assets.dart';
 import 'package:cosmo_clicker/core/utils/format_number.dart';
 import 'package:cosmo_clicker/presentation/controllers/dust_controller.dart';
 import 'package:cosmo_clicker/presentation/controllers/stats_controller.dart';
@@ -34,22 +35,47 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             children: [
               Stack(
                 children: [
-                  Image.asset(
-                    'assets/images/cosmo_icon.png',
-                    width: 80,
-                    height: 80,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                    child: Image.asset(
+                      AppAssets.cosmoIcon,
+                      width: 80,
+                      height: 80,
+                    ),
                   ),
                   Positioned(
                     right: 0,
                     bottom: 0,
-                    child: ValueListenableBuilder<bool>(
+                    child: ValueListenableBuilder<int>(
                       valueListenable: trophyController,
-                      builder: (context, hasTrophy, _) {
-                        if (!hasTrophy) return const SizedBox.shrink();
-                        return Icon(
-                          Icons.emoji_events,
-                          color: Colors.amber.shade400,
-                          size: 32,
+                      builder: (context, trophyCount, _) {
+                        if (trophyCount == 0) return const SizedBox.shrink();
+                        return Row(
+                          children: [
+                            Icon(
+                              Icons.emoji_events,
+                              color: Colors.amber.shade400,
+                              size: 32,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 2),
+                              child: Text(
+                                'x$trophyCount',
+                                style: const TextStyle(
+                                  color: Colors.amber,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                  shadows: [
+                                    Shadow(
+                                      blurRadius: 4,
+                                      color: Colors.black54,
+                                      offset: Offset(1, 1),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
                         );
                       },
                     ),
@@ -67,7 +93,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                         Expanded(
                           child: Container(
                             decoration: BoxDecoration(
-                              color: Colors.brown.shade700.withOpacity(0.85),
+                              color: const Color(0xFF1A1440).withOpacity(0.85),
                               borderRadius: BorderRadius.circular(32),
                             ),
                             padding: const EdgeInsets.symmetric(
@@ -106,7 +132,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                         Expanded(
                           child: Container(
                             decoration: BoxDecoration(
-                              color: Colors.brown.shade700.withOpacity(0.85),
+                              color: const Color(0xFF1A1440).withOpacity(0.85),
                               borderRadius: BorderRadius.circular(32),
                             ),
                             padding: const EdgeInsets.symmetric(
@@ -168,6 +194,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                       ],
                     ),
                   ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                child: Image.asset(
+                  AppAssets.settings,
+                  width: 80,
+                  height: 80,
                 ),
               ),
             ],

@@ -1,3 +1,4 @@
+import 'package:cosmo_clicker/core/constants/app_assets.dart';
 import 'package:cosmo_clicker/data/datasources/dust_local_data_source.dart';
 import 'package:cosmo_clicker/data/datasources/stats_local_data_source.dart';
 import 'package:cosmo_clicker/data/datasources/upgrade_local_data_source.dart';
@@ -24,9 +25,9 @@ class UpgradeRepositoryImpl implements UpgradeRepository {
   final List<Upgrade> _availableUpgrades = [
     Upgrade(
       name: "Núcleos de estrelas",
-      description: "Aumenta a quantidade de Dust gerada por click em um",
+      description: "Aumenta a quantidade de Dust gerada por click",
       baseCost: 50,
-      imagePath: 'assets/images/Small_Blackball_10x26.png',
+      imagePath: AppAssets.smallBlackballSprite,
       growthFactor: 1.2,
       level: 1,
       dustPerClickBonus: 1,
@@ -36,7 +37,7 @@ class UpgradeRepositoryImpl implements UpgradeRepository {
       description:
           "Melhora sua chance de ganhar tesouros clicando nas estrelas",
       baseCost: 1000,
-      imagePath: 'assets/images/stellar_treasure_chest_sprite_10x26.png',
+      imagePath: AppAssets.stellarTreasureChestSprite,
       growthFactor: 2.0,
       level: 1,
       chestChanceBonus: 1,

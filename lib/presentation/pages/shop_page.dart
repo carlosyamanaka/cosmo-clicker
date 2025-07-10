@@ -7,6 +7,7 @@ import 'package:get_it/get_it.dart';
 import 'package:cosmo_clicker/core/utils/format_number.dart';
 
 import '../../core/ui/animations/sprite_animation_widget.dart';
+import 'package:cosmo_clicker/core/constants/app_assets.dart';
 
 class ShopPage extends StatefulWidget {
   const ShopPage({super.key});
@@ -106,13 +107,13 @@ class UpgradeTile extends StatelessWidget {
           children: [
             ClipRRect(
                 borderRadius: BorderRadius.circular(12),
-                child: const SpriteAnimationWidget(
-                  image: AssetImage('assets/images/Small_Blackball_10x26.png'),
+                child: SpriteAnimationWidget(
+                  image: AssetImage(upgrade.imagePath),
                   frameCount: 60,
                   framesPerRow: 10,
                   frameWidth: 10,
                   frameHeight: 27,
-                  frameDuration: Duration(milliseconds: 80),
+                  frameDuration: const Duration(milliseconds: 80),
                   scale: 2.0,
                 )),
             const SizedBox(width: 16),
@@ -140,7 +141,7 @@ class UpgradeTile extends StatelessWidget {
                   Row(
                     children: [
                       Image.asset(
-                        'assets/images/dust.png',
+                        AppAssets.dust,
                         width: 20,
                         height: 20,
                       ),
