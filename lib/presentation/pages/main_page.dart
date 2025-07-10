@@ -9,6 +9,7 @@ import 'package:get_it/get_it.dart';
 import 'package:cosmo_clicker/domain/entities/upgrade.dart';
 import 'package:cosmo_clicker/core/ui/boss_chest_open_notifier.dart';
 import 'package:cosmo_clicker/presentation/widgets/floating_text.dart';
+import 'package:cosmo_clicker/core/ui/widgets/game_snackbar.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -67,7 +68,10 @@ class _MainPageState extends State<MainPage> {
     await chestController.tryDropChest();
     final after = chestController.value.length;
     if (after > before) {
+      final droppedChest = chestController.value.last;
       _chestDroppedNotifier.value = true;
+      GameSnackbar.show('Baú dropado: ${droppedChest.rarity.label}',
+          customLeading: droppedChest.rarity.image);
       Future.delayed(const Duration(seconds: 1), () {
         _chestDroppedNotifier.value = false;
       });

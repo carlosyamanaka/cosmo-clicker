@@ -1,13 +1,13 @@
 import 'dart:async';
-import 'dart:math';
+import 'package:cosmo_clicker/core/constants/app_assets.dart';
 import 'package:cosmo_clicker/core/ui/boss_chest_open_notifier.dart';
 import 'package:cosmo_clicker/domain/entities/chest.dart';
 import 'package:cosmo_clicker/presentation/controllers/chest_controller.dart';
 import 'package:cosmo_clicker/presentation/controllers/dust_controller.dart';
-import 'package:cosmo_clicker/presentation/controllers/stats_controller.dart';
-import 'package:cosmo_clicker/presentation/pages/boss_battle_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+
+import 'boss_battle_page.dart';
 
 class ChestPage extends StatefulWidget {
   const ChestPage({super.key});
@@ -20,7 +20,6 @@ class _ChestPageState extends State<ChestPage> {
   late final ChestController chestController;
   late final DustController dustController;
   late final ValueNotifier<DateTime> currentTimeNotifier;
-  late final StatsController statsController;
   Timer? _timer;
 
   @override
@@ -28,7 +27,6 @@ class _ChestPageState extends State<ChestPage> {
     super.initState();
     chestController = GetIt.instance<ChestController>();
     dustController = GetIt.instance<DustController>();
-    statsController = GetIt.instance<StatsController>();
     currentTimeNotifier = ValueNotifier(DateTime.now());
 
     if (chestController.value.isEmpty) {
@@ -79,90 +77,153 @@ class _ChestPageState extends State<ChestPage> {
   Widget buildChestImage(chest) {
     switch (chest.rarity) {
       case ChestRarity.common:
-        return ChestRarity.common.image;
+        return const Image(
+          image: AssetImage(AppAssets.commonChest),
+          height: 100,
+          alignment: Alignment.topLeft,
+        );
       case ChestRarity.rare:
-        return ChestRarity.rare.image;
+        return const Image(
+          image: AssetImage(AppAssets.rareChest),
+          height: 100,
+          alignment: Alignment.topLeft,
+        );
       case ChestRarity.stellar:
-        return ChestRarity.stellar.image;
+        return const Image(
+          image: AssetImage(AppAssets.stellarChest),
+          height: 100,
+          alignment: Alignment.topLeft,
+        );
       case ChestRarity.boss:
-        return ChestRarity.boss.image;
+        return const Image(
+          image: AssetImage(AppAssets.bossChest),
+          height: 100,
+          alignment: Alignment.topLeft,
+        );
       default:
         return const SizedBox.shrink();
     }
-  }
-
-  Future<int> generateChestReward() async {
-    final random = Random();
-    final dustPerClick = statsController.value.dustPerClick;
-    final int dust = (dustPerClick * (2 + random.nextInt(5))) +
-        random.nextInt(dustPerClick + 3);
-    Future.delayed(const Duration(seconds: 1), () {
-      dustController.addDust(dust);
-    });
-    return dust;
   }
 
   Widget buildChestOpener(
       Chest chest, Duration remainingTime, BuildContext context) {
     if (remainingTime <= Duration.zero) {
       return InkWell(
-        child: const Text(
-          'Aberto',
-          style: TextStyle(fontSize: 20),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          decoration: BoxDecoration(
+            color: Colors.amber.shade700,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.amber.withOpacity(0.3),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: const Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.card_giftcard, color: Colors.white, size: 28),
+              SizedBox(width: 12),
+              Text('Abrir Baú',
+                  style: TextStyle(
+                      fontSize: 22,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold)),
+            ],
+          ),
         ),
         onTap: () async {
           showDialog(
             context: context,
             barrierDismissible: false,
             builder: (context) {
-              return AlertDialog(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15)),
-                backgroundColor: const Color.fromARGB(255, 0, 0, 0),
-                content: const Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text('Abrindo o baú...'),
-                    SizedBox(height: 20),
-                    CircularProgressIndicator(),
-                  ],
+              return Center(
+                child: Container(
+                  padding: const EdgeInsets.all(32),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.85),
+                    borderRadius: BorderRadius.circular(24),
+                  ),
+                  child: const Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(height: 24),
+                      CircularProgressIndicator(color: Colors.amber),
+                      SizedBox(height: 16),
+                      Text('Abrindo...',
+                          style: TextStyle(fontSize: 22, color: Colors.white)),
+                    ],
+                  ),
                 ),
               );
             },
           );
 
-          final dust = await generateChestReward();
-          chestController.openChest(chest);
+          final dust = await chestController.generateChestReward(chest);
+          await chestController.openChest(chest);
           if (!context.mounted) return;
           Navigator.of(context).pop();
 
-          showDialog(
+          await showDialog(
             context: context,
+            barrierDismissible: false,
             builder: (context) {
-              return AlertDialog(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15)),
-                backgroundColor: const Color.fromARGB(255, 0, 0, 0),
-                title: const Text('🎉 Baú Aberto!'),
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(Icons.auto_awesome,
-                        color: Colors.amber, size: 60),
-                    const SizedBox(height: 10),
-                    Text(
-                      '+$dust Dust',
-                      style: const TextStyle(
-                          fontSize: 26, fontWeight: FontWeight.bold),
-                    ),
-                  ],
+              return Center(
+                child: Container(
+                  padding: const EdgeInsets.all(32),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.95),
+                    borderRadius: BorderRadius.circular(32),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.amber.withOpacity(0.4),
+                        blurRadius: 24,
+                        offset: const Offset(0, 8),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.auto_awesome,
+                          color: Colors.amber.shade400, size: 80),
+                      const SizedBox(height: 18),
+                      Text(
+                        '+$dust Dust',
+                        style: const TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.amber),
+                      ),
+                      const SizedBox(height: 12),
+                      Text(
+                        chest.rarity.label,
+                        style: TextStyle(
+                            fontSize: 22, color: Colors.white.withOpacity(0.9)),
+                      ),
+                      const SizedBox(height: 24),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.amber.shade700,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16)),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 32, vertical: 14),
+                        ),
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: const Text('OK',
+                            style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold)),
+                      ),
+                    ],
+                  ),
                 ),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('Ok'),
-                  )
-                ],
               );
             },
           );

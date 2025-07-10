@@ -149,6 +149,7 @@ void setupLocator() {
         locator<SaveChestCounter>(),
         locator<GetChestProbability>(),
         locator<SaveChestProbability>(),
+        locator<DustController>(),
       ));
 
   locator.registerLazySingleton<BossController>(() => BossController());

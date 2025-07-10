@@ -8,6 +8,7 @@ import 'package:cosmo_clicker/core/utils/format_number.dart';
 
 import '../../core/ui/animations/sprite_animation_widget.dart';
 import 'package:cosmo_clicker/core/constants/app_assets.dart';
+import 'package:cosmo_clicker/core/ui/widgets/game_snackbar.dart';
 
 class ShopPage extends StatefulWidget {
   const ShopPage({super.key});
@@ -166,17 +167,10 @@ class UpgradeTile extends StatelessWidget {
                 if (dust.amount >= upgrade.cost) {
                   await upgradeController.buyUpgradeItem(upgrade);
                   onBuy();
-                  if (!context.mounted) return;
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                        content: Text('Upgrade comprado com sucesso!')),
-                  );
+                  GameSnackbar.show('Upgrade comprado com sucesso!');
                 } else {
-                  if (!context.mounted) return;
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                        content: Text('Poeira Estelar insuficiente.')),
-                  );
+                  GameSnackbar.show('Poeira Estelar insuficiente.',
+                      success: false);
                 }
               },
               child: AnimatedContainer(

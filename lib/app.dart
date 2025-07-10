@@ -1,3 +1,4 @@
+import 'package:cosmo_clicker/core/ui/widgets/game_snackbar.dart';
 import 'package:cosmo_clicker/presentation/pages/home_page.dart';
 import 'package:flutter/material.dart';
 
@@ -10,6 +11,7 @@ class CosmoClickerApp extends StatelessWidget {
       title: 'Cosmo Clicker',
       theme: ThemeData.dark(),
       debugShowCheckedModeBanner: false,
+      navigatorKey: GameSnackbar.navigatorKey,
       home: const HomePage(),
     );
   }
