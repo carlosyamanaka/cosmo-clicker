@@ -110,17 +110,18 @@ class _MainPageState extends State<MainPage> {
                               listenable: Listenable.merge(
                                   [dustController, statsController]),
                               builder: (context, _) {
-                                return GestureDetector(
-                                  onPanUpdate: (details) {
+                                return Listener(
+                                  behavior: HitTestBehavior.opaque,
+                                  onPointerMove: (details) {
                                     if (_autoClickActive) {
                                       _shouldAutoClick++;
-                                      if (_shouldAutoClick >= 20) {
+                                      if (_shouldAutoClick >= 10) {
                                         _clickHandler(details);
                                         _shouldAutoClick = 0;
                                       }
                                     }
                                   },
-                                  onTapDown: (details) {
+                                  onPointerDown: (details) {
                                     _clickHandler(details);
                                   },
                                   child: Stack(
@@ -143,6 +144,12 @@ class _MainPageState extends State<MainPage> {
                                                 (u) =>
                                                     u.name ==
                                                     'Núcleos de estrelas',
+                                                orElse: () => Upgrade(
+                                                  name: 'Núcleos de estrelas',
+                                                  level: 0,
+                                                  baseCost: 0,
+                                                  imagePath: '',
+                                                ),
                                               );
                                               return StarOverlay(
                                                 starCount: starUpgrade.level,

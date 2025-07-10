@@ -241,9 +241,35 @@ class _ChestPageState extends State<ChestPage> {
       Chest chest, Duration remainingTime, BuildContext context) {
     if (remainingTime <= Duration.zero) {
       return InkWell(
-        child: const Text(
-          'Aberto',
-          style: TextStyle(fontSize: 20),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
+          decoration: BoxDecoration(
+            color: Colors.deepPurple.shade700,
+            borderRadius: BorderRadius.circular(18),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.purpleAccent.withOpacity(0.5),
+                blurRadius: 18,
+                offset: const Offset(0, 6),
+              ),
+            ],
+          ),
+          child: const Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.shield, color: Colors.amber, size: 30),
+              SizedBox(width: 14),
+              Text(
+                'Enfrentar Boss',
+                style: TextStyle(
+                  fontSize: 22,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
         ),
         onTap: () async {
           showDialog(
@@ -318,6 +344,7 @@ class _ChestPageState extends State<ChestPage> {
         final isEmpty = chestController.value.isEmpty;
         return Column(
           children: [
+            const SizedBox(height: 24),
             Expanded(
               child: isEmpty
                   ? Center(
@@ -348,32 +375,60 @@ class _ChestPageState extends State<ChestPage> {
                             final chest = chestController.value[index];
                             final remainingTimeToChestOpen = chest.openDate
                                 .difference(currentTimeNotifier.value);
-                            return Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Column(
-                                  children: [
-                                    buildChestImage(chest),
-                                    Text(
-                                      chest.rarity.label,
-                                      style: const TextStyle(fontSize: 20),
-                                    )
-                                  ],
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16),
+                              child: Card(
+                                color:
+                                    Colors.deepPurple.shade900.withOpacity(0.7),
+                                elevation: 6,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(18)),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 16, horizontal: 12),
+                                  child: Row(
+                                    children: [
+                                      SizedBox(
+                                        width: 110,
+                                        child: Column(
+                                          children: [
+                                            buildChestImage(chest),
+                                            const SizedBox(height: 8),
+                                            Text(
+                                              chest.rarity.label,
+                                              style: const TextStyle(
+                                                  fontSize: 20,
+                                                  color: Colors.white),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      const SizedBox(width: 18),
+                                      Expanded(
+                                        child: Align(
+                                          alignment: Alignment.centerRight,
+                                          child:
+                                              chest.rarity == ChestRarity.boss
+                                                  ? buildBossChestOpener(
+                                                      chest,
+                                                      remainingTimeToChestOpen,
+                                                      context)
+                                                  : buildChestOpener(
+                                                      chest,
+                                                      remainingTimeToChestOpen,
+                                                      context),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                                const SizedBox(width: 16),
-                                if (chest.rarity == ChestRarity.boss)
-                                  buildBossChestOpener(
-                                      chest, remainingTimeToChestOpen, context),
-                                if (chest.rarity != ChestRarity.boss)
-                                  buildChestOpener(
-                                      chest, remainingTimeToChestOpen, context),
-                              ],
+                              ),
                             );
                           },
                           separatorBuilder: (context, index) {
-                            return const SizedBox(
-                              height: 16,
-                            );
+                            return const SizedBox(height: 16);
                           },
                         ),
                       ],

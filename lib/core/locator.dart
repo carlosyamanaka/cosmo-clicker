@@ -152,6 +152,7 @@ void setupLocator() {
         locator<DustController>(),
       ));
 
-  locator.registerLazySingleton<BossController>(() => BossController());
+  locator.registerLazySingleton<BossController>(
+      () => BossController(trophyCount: locator<TrophyController>()));
   locator.registerLazySingleton<TrophyController>(() => TrophyController());
 }

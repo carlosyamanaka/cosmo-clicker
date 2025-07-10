@@ -4,6 +4,7 @@ import 'package:cosmo_clicker/presentation/controllers/dust_controller.dart';
 import 'package:cosmo_clicker/presentation/controllers/stats_controller.dart';
 import 'package:cosmo_clicker/presentation/controllers/chest_controller.dart';
 import 'package:cosmo_clicker/presentation/controllers/trophy_controller.dart';
+import 'package:cosmo_clicker/presentation/pages/settings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:cosmo_clicker/domain/entities/stats.dart';
@@ -196,12 +197,21 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                child: Image.asset(
-                  AppAssets.settings,
-                  width: 80,
-                  height: 80,
+              InkWell(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => const SettingsPage(),
+                    ),
+                  );
+                },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                  child: Image.asset(
+                    AppAssets.settings,
+                    width: 80,
+                    height: 80,
+                  ),
                 ),
               ),
             ],
