@@ -31,39 +31,6 @@ class _ChestPageState extends State<ChestPage> {
     dustController = GetIt.instance<DustController>();
     currentTimeNotifier = ValueNotifier(DateTime.now());
 
-    if (chestController.value.isEmpty) {
-      final now = DateTime(2025, 7, 6);
-      for (int i = 0; i < 3; i++) {
-        final chest = Chest(
-          dropDate: now.add(Duration(seconds: i)),
-          rarity: ChestRarity.boss,
-        );
-        chestController.addChest(chest);
-        if (i == 0) {
-          chestController.addChest(
-            Chest(
-              dropDate: now.add(const Duration(seconds: 5)),
-              rarity: ChestRarity.common,
-            ),
-          );
-        } else if (i == 1) {
-          chestController.addChest(
-            Chest(
-              dropDate: now.add(const Duration(seconds: 10)),
-              rarity: ChestRarity.rare,
-            ),
-          );
-        } else if (i == 2) {
-          chestController.addChest(
-            Chest(
-              dropDate: now.add(const Duration(seconds: 15)),
-              rarity: ChestRarity.stellar,
-            ),
-          );
-        }
-      }
-    } //TODO tirar o if
-
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
       currentTimeNotifier.value = DateTime.now();
     });
@@ -351,6 +318,51 @@ class _ChestPageState extends State<ChestPage> {
         return Column(
           children: [
             const SizedBox(height: 24),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: Tooltip(
+                  message:
+                      'Dropar um baú de boss é apenas para testar a funcionalidade.\nPara ter a experiência completa, não use esse botão!',
+                  child: ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.deepPurple.shade700,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 18, vertical: 10),
+                    ),
+                    icon: const Icon(Icons.bug_report, color: Colors.amber),
+                    label: const Text(
+                      'Adicionar baú de boss',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    onPressed: () {
+                      final now = DateTime.now();
+                      chestController.addChest(
+                        Chest(
+                          dropDate: now.add(const Duration(seconds: 5)),
+                          rarity: ChestRarity.boss,
+                        ),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            'Dropar um baú de boss é apenas para testar a funcionalidade.Para ter a experiência completa, não use esse botão!',
+                          ),
+                          backgroundColor: Colors.deepPurple,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ),
             Expanded(
               child: isEmpty
                   ? Center(

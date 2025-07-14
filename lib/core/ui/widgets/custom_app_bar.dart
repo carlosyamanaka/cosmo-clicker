@@ -22,6 +22,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isSmallScreen = MediaQuery.of(context).size.width < 400;
+    final cosmoIconSize = isSmallScreen ? 60.0 : 80.0;
+    final settingsIconSize = isSmallScreen ? 60.0 : 80.0;
+    final infoIconSize = isSmallScreen ? 20.0 : 32.0;
+
     return Material(
       elevation: 6,
       color: Colors.deepPurple.shade800,
@@ -40,8 +45,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 4.0),
                     child: Image.asset(
                       AppAssets.cosmoIcon,
-                      width: 80,
-                      height: 80,
+                      width: cosmoIconSize,
+                      height: cosmoIconSize,
                     ),
                   ),
                   Positioned(
@@ -104,8 +109,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                               children: [
                                 Image.asset(
                                   AppAssets.dust,
-                                  width: 32,
-                                  height: 32,
+                                  width: infoIconSize,
+                                  height: infoIconSize,
                                 ),
                                 const SizedBox(width: 8),
                                 ListenableBuilder(
@@ -145,8 +150,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                                   children: [
                                     Image.asset(
                                       AppAssets.dustTap,
-                                      width: 32,
-                                      height: 32,
+                                      width: infoIconSize,
+                                      height: infoIconSize,
                                     ),
                                     const SizedBox(width: 8),
                                     ValueListenableBuilder<Stats>(
@@ -168,8 +173,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                                   children: [
                                     Image.asset(
                                       AppAssets.chestChance,
-                                      width: 32,
-                                      height: 32,
+                                      width: infoIconSize,
+                                      height: infoIconSize,
                                     ),
                                     const SizedBox(width: 8),
                                     ValueListenableBuilder<double>(
@@ -209,8 +214,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 4.0),
                   child: Image.asset(
                     AppAssets.settings,
-                    width: 80,
-                    height: 80,
+                    width: settingsIconSize,
+                    height: settingsIconSize,
                   ),
                 ),
               ),
