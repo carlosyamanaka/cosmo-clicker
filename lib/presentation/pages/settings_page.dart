@@ -41,7 +41,6 @@ class SettingsPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 48),
-          
             ],
           ),
         ),

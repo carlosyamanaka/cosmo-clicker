@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:cosmo_clicker/core/constants/app_assets.dart';
 import 'package:cosmo_clicker/presentation/controllers/boss_controller.dart';
 import 'package:cosmo_clicker/presentation/controllers/stats_controller.dart';
@@ -20,34 +21,45 @@ class _BossBattlePageState extends State<BossBattlePage> {
   late final TrophyController trophyController;
   Timer? _timer;
   int _secondsLeft = 60;
+  late final AudioPlayer player;
 
   @override
   void initState() {
     super.initState();
+    player = AudioPlayer();
     bossController = GetIt.instance<BossController>();
     statsController = GetIt.instance<StatsController>();
     trophyController = GetIt.instance<TrophyController>();
     bossController.reset();
     bossController.addListener(_checkBossDefeated);
     _startTimer();
+    _playLoop();
   }
 
-  void _startTimer() {
+  Future<void> _startTimer() async {
     _secondsLeft = 60;
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) async {
       if (!mounted) return;
       setState(() {
         _secondsLeft--;
       });
       if (_secondsLeft <= 0) {
         _timer?.cancel();
+        await player.play(AssetSource('sounds/negative_beeps.mp3'));
         _showFailedDialog();
       }
     });
   }
 
+  Future<void> _playLoop() async {
+    await player.setReleaseMode(ReleaseMode.loop);
+    await player.play(AssetSource('sounds/boss_theme.mp3'));
+  }
+
   @override
   void dispose() {
+    player.stop();
+    player.dispose();
     bossController.removeListener(_checkBossDefeated);
     _timer?.cancel();
     super.dispose();

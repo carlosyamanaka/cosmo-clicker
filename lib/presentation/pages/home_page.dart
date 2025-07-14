@@ -5,6 +5,8 @@ import 'package:cosmo_clicker/presentation/pages/main_page.dart';
 import 'package:cosmo_clicker/presentation/pages/shop_page.dart';
 import 'package:flutter/material.dart';
 
+import '../../core/constants/app_assets.dart';
+
 enum HomePageTransition { fade, boss }
 
 class HomePage extends StatefulWidget {
@@ -97,7 +99,7 @@ class _HomePageState extends State<HomePage> {
                                         const Duration(milliseconds: 1500),
                                     curve: Curves.easeOut,
                                     child: Image.asset(
-                                      'assets/gifs/glitch.gif',
+                                      AppAssets.glitchGif,
                                       fit: BoxFit.cover,
                                       opacity:
                                           const AlwaysStoppedAnimation(0.7),

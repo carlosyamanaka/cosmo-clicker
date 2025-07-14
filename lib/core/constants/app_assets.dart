@@ -1,6 +1,7 @@
 class AppAssets {
-  static const String cosmoIcon = 'assets/images/cosmo_icon.png';
-  static const String settings = 'assets/images/settings.png';
+  static const String cosmoIcon = 'assets/icons/cosmo_icon.png';
+  static const String settings = 'assets/icons/settings.png';
+
   static const String dust = 'assets/images/dust.png';
   static const String boss = 'assets/images/boss.png';
   static const String chestChance = 'assets/images/chest_chance.png';
@@ -12,6 +13,11 @@ class AppAssets {
   static const String rareChest = 'assets/images/rare_chest.png';
   static const String stellarChest = 'assets/images/stellar_chest.png';
   static const String bossChest = 'assets/images/boss_chest.png';
+
+  static const String home = 'assets/icons/home.png';
+  // static const String store = 'assets/icons/store.png';
+  static const String shoppingCard = 'assets/icons/shopping_card.png';
+  static const String treasureChest = 'assets/icons/treasure_chest.png';  
 
   // Spritesheets
   static const String smallBlackballSprite =

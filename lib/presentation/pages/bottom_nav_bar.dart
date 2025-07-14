@@ -1,3 +1,4 @@
+import 'package:cosmo_clicker/core/constants/app_assets.dart';
 import 'package:flutter/material.dart';
 
 class BottomNavBar extends StatelessWidget {
@@ -16,10 +17,30 @@ class BottomNavBar extends StatelessWidget {
       currentIndex: selectedIndex,
       onTap: onItemTapped,
       items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-        BottomNavigationBarItem(icon: Icon(Icons.shop), label: 'Loja'),
         BottomNavigationBarItem(
-            icon: Icon(Icons.monetization_on), label: 'Baúzinho')
+          icon: Image(
+            image: AssetImage(AppAssets.home),
+            height: 19,
+            fit: BoxFit.cover,
+          ),
+          label: 'Home',
+        ),
+        BottomNavigationBarItem(
+          icon: Image(
+            image: AssetImage(AppAssets.shoppingCard),
+            width: 22,
+            fit: BoxFit.cover,
+          ),
+          label: 'Loja',
+        ),
+        BottomNavigationBarItem(
+          icon: Image(
+            image: AssetImage(AppAssets.treasureChest),
+            height: 22,
+            fit: BoxFit.cover,
+          ),
+          label: 'Baúzinho',
+        )
       ],
     );
   }

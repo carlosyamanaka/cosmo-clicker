@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:cosmo_clicker/core/ui/animations/particle_explosion.dart';
 import 'package:cosmo_clicker/presentation/controllers/chest_controller.dart';
 import 'package:cosmo_clicker/presentation/controllers/dust_controller.dart';
@@ -30,6 +31,8 @@ class _MainPageState extends State<MainPage> {
   late final bool _autoClickActive;
   int _shouldAutoClick = 0;
 
+  late final AudioPlayer player;
+
   final List<FloatingText> _floatingTexts = [];
 
   @override
@@ -40,6 +43,7 @@ class _MainPageState extends State<MainPage> {
     chestController = GetIt.instance<ChestController>();
     upgradeController = GetIt.instance<UpgradeController>();
     _autoClickActive = statsController.value.autoClickActive;
+    player = AudioPlayer();
   }
 
   void _updateTapPosition(Offset position) {
@@ -63,6 +67,7 @@ class _MainPageState extends State<MainPage> {
   }
 
   void _clickHandler(details) async {
+    await player.play(AssetSource('sounds/level-up-bonus-sequence-1.mp3'));
     dustController.addDust(statsController.value.dustPerClick);
     final before = chestController.value.length;
     await chestController.tryDropChest();
@@ -168,40 +173,6 @@ class _MainPageState extends State<MainPage> {
                                         },
                                       ),
                                       ..._floatingTexts,
-                                    ],
-                                  ),
-                                );
-                              },
-                            ),
-                            ValueListenableBuilder<bool>(
-                              valueListenable: _chestDroppedNotifier,
-                              builder: (context, dropped, _) {
-                                if (!dropped) return const SizedBox.shrink();
-                                return AnimatedOpacity(
-                                  opacity: dropped ? 1 : 0,
-                                  duration: const Duration(milliseconds: 300),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Image.asset(
-                                          'assets/images/boss_chest.png',
-                                          width: 80),
-                                      const SizedBox(height: 8),
-                                      Text(
-                                        'Baú Dropado!',
-                                        style: TextStyle(
-                                          fontSize: 22,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.amber.shade700,
-                                          shadows: const [
-                                            Shadow(
-                                              blurRadius: 8,
-                                              color: Colors.black45,
-                                              offset: Offset(2, 2),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
                                     ],
                                   ),
                                 );

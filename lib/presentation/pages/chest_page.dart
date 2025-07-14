@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:cosmo_clicker/core/constants/app_assets.dart';
 import 'package:cosmo_clicker/core/ui/boss_chest_open_notifier.dart';
 import 'package:cosmo_clicker/domain/entities/chest.dart';
@@ -20,6 +21,7 @@ class _ChestPageState extends State<ChestPage> {
   late final ChestController chestController;
   late final DustController dustController;
   late final ValueNotifier<DateTime> currentTimeNotifier;
+  final player = AudioPlayer();
   Timer? _timer;
 
   @override
@@ -137,7 +139,11 @@ class _ChestPageState extends State<ChestPage> {
           ),
         ),
         onTap: () async {
+          await player.play(
+            AssetSource('sounds/winfantasia.mp3'),
+          );
           showDialog(
+            // ignore: use_build_context_synchronously
             context: context,
             barrierDismissible: false,
             builder: (context) {

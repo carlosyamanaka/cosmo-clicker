@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:cosmo_clicker/presentation/controllers/dust_controller.dart';
 import 'package:cosmo_clicker/domain/entities/upgrade.dart';
@@ -98,6 +99,7 @@ class UpgradeTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final dustController = GetIt.instance<DustController>();
     final upgradeController = GetIt.instance<UpgradeController>();
+    final player = AudioPlayer();
     return Card(
       color: Colors.black.withOpacity(0.7),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
@@ -115,7 +117,7 @@ class UpgradeTile extends StatelessWidget {
                   frameWidth: 10,
                   frameHeight: 27,
                   frameDuration: const Duration(milliseconds: 80),
-                  scale: 2.0,
+                  scale: 3.0,
                 )),
             const SizedBox(width: 16),
             Expanded(
@@ -165,10 +167,13 @@ class UpgradeTile extends StatelessWidget {
               onTap: () async {
                 final dust = await dustController.getDust();
                 if (dust.amount >= upgrade.cost) {
+                  await player.play(
+                      AssetSource('sounds/purchase-succesful-ingame.mp3'));
                   await upgradeController.buyUpgradeItem(upgrade);
                   onBuy();
                   GameSnackbar.show('Upgrade comprado com sucesso!');
                 } else {
+                  await player.play(AssetSource('sounds/negative_beeps.mp3'));
                   GameSnackbar.show('Poeira Estelar insuficiente.',
                       success: false);
                 }

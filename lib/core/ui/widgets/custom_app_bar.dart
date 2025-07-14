@@ -103,7 +103,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Image.asset(
-                                  'assets/images/dust.png',
+                                  AppAssets.dust,
                                   width: 32,
                                   height: 32,
                                 ),
@@ -144,7 +144,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                                 Row(
                                   children: [
                                     Image.asset(
-                                      'assets/images/dust_tap.png',
+                                      AppAssets.dustTap,
                                       width: 32,
                                       height: 32,
                                     ),
@@ -167,7 +167,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                                 Row(
                                   children: [
                                     Image.asset(
-                                      'assets/images/chest_chance.png',
+                                      AppAssets.chestChance,
                                       width: 32,
                                       height: 32,
                                     ),
