@@ -23,7 +23,7 @@ class BottomNavBar extends StatelessWidget {
             height: 19,
             fit: BoxFit.cover,
           ),
-          label: 'Home',
+          label: 'Início',
         ),
         BottomNavigationBarItem(
           icon: Image(

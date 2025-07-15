@@ -61,6 +61,7 @@ pubspec.lock
 .pub-cache/
 .pub/
 /build/
+.metadata
 # Node.js dependencies
 /node_modules/
 flutter_*.png

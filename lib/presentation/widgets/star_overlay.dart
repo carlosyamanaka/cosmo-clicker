@@ -5,31 +5,51 @@ class StarOverlay extends StatelessWidget {
   final int starCount;
   final double width;
   final double height;
+  final Offset? moonCenter;
+  final double moonRadius;
 
   const StarOverlay({
     super.key,
     required this.starCount,
     required this.width,
     required this.height,
+    this.moonCenter,
+    this.moonRadius = 120,
   });
 
   @override
   Widget build(BuildContext context) {
     final random = Random(starCount);
-    return Stack(
-      children: List.generate(starCount, (index) {
-        final left = random.nextDouble() * (width - 40);
-        final top = random.nextDouble() * (height - 40);
-        return Positioned(
+    final List<Widget> stars = [];
+    int attempts = 0;
+    int placed = 0;
+
+    while (placed < starCount && attempts < starCount * 10) {
+      final left = random.nextDouble() * (width - 40);
+      final top = random.nextDouble() * (height - 40);
+      final starCenter = Offset(left + 16, top + 16);
+
+      bool overlapsMoon = false;
+      if (moonCenter != null) {
+        overlapsMoon =
+            (starCenter - moonCenter!).distance < moonRadius / 2 + 24;
+      }
+
+      if (!overlapsMoon) {
+        stars.add(Positioned(
           left: left,
           top: top,
           child: CustomPaint(
             size: const Size(32, 32),
             painter: _StarPainter(),
           ),
-        );
-      }),
-    );
+        ));
+        placed++;
+      }
+      attempts++;
+    }
+
+    return Stack(children: stars);
   }
 }
 

@@ -210,39 +210,55 @@ class AutoClickToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        statsController.toggleAutoClick();
-      },
-      child: ListenableBuilder(
-        listenable: statsController,
-        builder: (context, snapshot) {
-          return Container(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-            decoration: BoxDecoration(
-              color: statsController.value.autoClickActive
-                  ? Colors.green
-                  : Colors.red,
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.2),
-                  blurRadius: 6,
-                  offset: const Offset(0, 3),
+    return Column(
+      children: [
+        InkWell(
+          onTap: () {
+            statsController.toggleAutoClick();
+          },
+          child: ListenableBuilder(
+            listenable: statsController,
+            builder: (context, snapshot) {
+              return Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                decoration: BoxDecoration(
+                  color: statsController.value.autoClickActive
+                      ? Colors.green
+                      : Colors.red,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.2),
+                      blurRadius: 6,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
                 ),
-              ],
+                child: const Text(
+                  'Ligar/Desligar Auto Clicker',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+        const SizedBox(height: 6),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 36),
+          child: Text(
+            'Dica: Para usar o Auto Clicker, clique e arraste na tela inicial.',
+            style: TextStyle(
+              color: Colors.white70,
+              fontSize: 13,
             ),
-            child: const Text(
-              'Ligar/Desligar Auto Clicker',
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-              ),
-            ),
-          );
-        },
-      ),
+          ),
+        ),
+      ],
     );
   }
 }

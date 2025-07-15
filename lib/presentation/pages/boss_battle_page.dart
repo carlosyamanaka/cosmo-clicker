@@ -20,7 +20,7 @@ class _BossBattlePageState extends State<BossBattlePage> {
   late final StatsController statsController;
   late final TrophyController trophyController;
   Timer? _timer;
-  int _secondsLeft = 60;
+  int _secondsLeft = 48;
   late final AudioPlayer player;
 
   @override
@@ -37,7 +37,7 @@ class _BossBattlePageState extends State<BossBattlePage> {
   }
 
   Future<void> _startTimer() async {
-    _secondsLeft = 60;
+    _secondsLeft = 48;
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) async {
       if (!mounted) return;
       setState(() {
@@ -53,7 +53,8 @@ class _BossBattlePageState extends State<BossBattlePage> {
 
   Future<void> _playLoop() async {
     await player.setReleaseMode(ReleaseMode.loop);
-    await player.play(AssetSource('sounds/boss_theme.mp3'));
+    await player
+        .play(AssetSource('sounds/techno-vampire-boss-fight-loop-318677.mp3'));
   }
 
   @override
@@ -70,8 +71,39 @@ class _BossBattlePageState extends State<BossBattlePage> {
       _timer?.cancel();
       await trophyController.addTrophy();
       if (mounted) {
-        Navigator.of(context).popUntil((route) => route.isFirst);
-        HomePage.goToTab(0);
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => AlertDialog(
+            backgroundColor: Colors.black87,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            title: const Text(
+              'Parabéns!',
+              style: TextStyle(
+                  color: Colors.amber,
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold),
+            ),
+            content: const Text(
+              'Você derrotou o boss e zerou o jogo!\n\nVocê pode continuar jogando se quiser, com bosses cada vez mais difíceis.',
+              style: TextStyle(color: Colors.white70, fontSize: 18),
+              textAlign: TextAlign.center,
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).popUntil((route) => route.isFirst);
+                  HomePage.goToTab(0);
+                },
+                child: const Text(
+                  'Continuar',
+                  style: TextStyle(color: Colors.white, fontSize: 18),
+                ),
+              ),
+            ],
+          ),
+        );
       }
     }
   }
@@ -108,8 +140,13 @@ class _BossBattlePageState extends State<BossBattlePage> {
   }
 
   Color _backgroundColor() {
-    final percent = 1 - (_secondsLeft / 60).clamp(0.0, 1.0);
+    final percent = 1 - (_secondsLeft / 48).clamp(0.0, 0.7);
     return Color.lerp(Colors.black, Colors.red.shade900, percent)!;
+  }
+
+  Color _bossColor() {
+    final percent = 1 - (_secondsLeft / 48).clamp(0.0, 0.35);
+    return Color.lerp(Colors.white, Colors.red.shade900, percent)!;
   }
 
   @override
@@ -118,6 +155,18 @@ class _BossBattlePageState extends State<BossBattlePage> {
       backgroundColor: _backgroundColor(),
       body: Stack(
         children: [
+          Positioned.fill(
+            child: ColorFiltered(
+              colorFilter: ColorFilter.mode(
+                _backgroundColor().withOpacity(0.45),
+                BlendMode.srcATop,
+              ),
+              child: Image.asset(
+                AppAssets.bossBackground,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
           Positioned.fill(
             child: Listener(
               behavior: HitTestBehavior.opaque,
@@ -153,26 +202,33 @@ class _BossBattlePageState extends State<BossBattlePage> {
           ),
           Align(
             alignment: Alignment.bottomCenter,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
+            child: Stack(
+              alignment: Alignment.bottomCenter,
               children: [
                 GestureDetector(
                   onTap: () {
                     bossController.damage(statsController.value.dustPerClick);
                   },
-                  child: Image.asset(
-                    AppAssets.boss,
-                    width: MediaQuery.of(context).size.width * 0.5,
+                  child: ColorFiltered(
+                    colorFilter: ColorFilter.mode(
+                      _bossColor().withOpacity(0.65),
+                      BlendMode.modulate,
+                    ),
+                    child: Image.asset(
+                      AppAssets.boss,
+                      width: MediaQuery.of(context).size.width * 0.78,
+                      fit: BoxFit.contain,
+                    ),
                   ),
                 ),
-                const SizedBox(height: 32),
-                ValueListenableBuilder<int>(
-                  valueListenable: bossController,
-                  builder: (context, hp, _) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 32, vertical: 16),
-                      child: TweenAnimationBuilder<double>(
+                Positioned(
+                  bottom: 8,
+                  left: 32,
+                  right: 32,
+                  child: ValueListenableBuilder<int>(
+                    valueListenable: bossController,
+                    builder: (context, hp, _) {
+                      return TweenAnimationBuilder<double>(
                         tween: Tween<double>(
                           begin: 0,
                           end: hp / bossController.maxHp,
@@ -187,9 +243,9 @@ class _BossBattlePageState extends State<BossBattlePage> {
                                 Colors.redAccent),
                           );
                         },
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
               ],
             ),

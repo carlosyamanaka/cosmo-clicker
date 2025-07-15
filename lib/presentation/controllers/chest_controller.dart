@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:cosmo_clicker/domain/entities/chest.dart';
 import 'package:cosmo_clicker/domain/usecases/drop_chest.dart';
 import 'package:cosmo_clicker/domain/usecases/get_chests.dart';
@@ -26,6 +27,7 @@ class ChestController extends ValueNotifier<List<Chest>> {
   ValueNotifier<double> dropProbability;
   int _chestsSinceLastBoss = 0;
   final Random _random = Random();
+  late final AudioPlayer player = AudioPlayer();
 
   ChestController(
     this.getChests,
@@ -100,6 +102,7 @@ class ChestController extends ValueNotifier<List<Chest>> {
         dropDate: DateTime.now(),
         rarity: rarity,
       );
+      await player.play(AssetSource('sounds/level-up-bonus-sequence-1.mp3'));
       await addChest(chest);
     }
   }

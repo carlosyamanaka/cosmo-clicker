@@ -25,7 +25,7 @@ class UpgradeRepositoryImpl implements UpgradeRepository {
   final List<Upgrade> _availableUpgrades = [
     Upgrade(
       name: "Núcleos de estrelas",
-      description: "Aumenta a quantidade de Dust gerada por click",
+      description: "Aumenta a quantidade de fragmento estelar gerada por click",
       baseCost: 50,
       imagePath: AppAssets.smallBlackballSprite,
       growthFactor: 1.2,

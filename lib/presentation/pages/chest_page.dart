@@ -76,11 +76,18 @@ class _ChestPageState extends State<ChestPage> {
 
   Widget buildChestOpener(
       Chest chest, Duration remainingTime, BuildContext context) {
+    final isSmallScreen = MediaQuery.of(context).size.width < 400;
+    final buttonFontSize = isSmallScreen ? 14.0 : 22.0;
+    final buttonPadding = isSmallScreen
+        ? const EdgeInsets.symmetric(horizontal: 14, vertical: 8)
+        : const EdgeInsets.symmetric(horizontal: 24, vertical: 12);
+    final iconSize = isSmallScreen ? 18.0 : 28.0;
+
     if (remainingTime <= Duration.zero) {
       return InkWell(
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+          padding: buttonPadding,
           decoration: BoxDecoration(
             color: Colors.amber.shade700,
             borderRadius: BorderRadius.circular(16),
@@ -92,16 +99,19 @@ class _ChestPageState extends State<ChestPage> {
               ),
             ],
           ),
-          child: const Row(
+          child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.card_giftcard, color: Colors.white, size: 28),
-              SizedBox(width: 12),
-              Text('Abrir Baú',
-                  style: TextStyle(
-                      fontSize: 22,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold)),
+              Icon(Icons.card_giftcard, color: Colors.white, size: iconSize),
+              SizedBox(width: isSmallScreen ? 6 : 12),
+              Text(
+                'Abrir Baú',
+                style: TextStyle(
+                  fontSize: buttonFontSize,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ],
           ),
         ),
@@ -110,7 +120,6 @@ class _ChestPageState extends State<ChestPage> {
             AssetSource('sounds/winfantasia.mp3'),
           );
           showDialog(
-            // ignore: use_build_context_synchronously
             context: context,
             barrierDismissible: false,
             builder: (context) {
@@ -166,7 +175,7 @@ class _ChestPageState extends State<ChestPage> {
                           color: Colors.amber.shade400, size: 80),
                       const SizedBox(height: 18),
                       Text(
-                        '+$dust Dust',
+                        '+$dust Fragmentos Estelares',
                         style: const TextStyle(
                             fontSize: 32,
                             fontWeight: FontWeight.bold,
@@ -205,18 +214,25 @@ class _ChestPageState extends State<ChestPage> {
     } else {
       return Text(
         '${remainingTime.inHours}:${(remainingTime.inMinutes % 60).toString().padLeft(2, '0')}:${(remainingTime.inSeconds % 60).toString().padLeft(2, '0')}',
-        style: const TextStyle(fontSize: 20),
+        style: TextStyle(fontSize: buttonFontSize),
       );
     }
   }
 
   Widget buildBossChestOpener(
       Chest chest, Duration remainingTime, BuildContext context) {
+    final isSmallScreen = MediaQuery.of(context).size.width < 400;
+    final buttonFontSize = isSmallScreen ? 14.0 : 22.0;
+    final buttonPadding = isSmallScreen
+        ? const EdgeInsets.symmetric(horizontal: 16, vertical: 8)
+        : const EdgeInsets.symmetric(horizontal: 28, vertical: 14);
+    final iconSize = isSmallScreen ? 20.0 : 30.0;
+
     if (remainingTime <= Duration.zero) {
       return InkWell(
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
-          padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 14),
+          padding: buttonPadding,
           decoration: BoxDecoration(
             color: Colors.deepPurple.shade700,
             borderRadius: BorderRadius.circular(18),
@@ -228,15 +244,15 @@ class _ChestPageState extends State<ChestPage> {
               ),
             ],
           ),
-          child: const Row(
+          child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.shield, color: Colors.amber, size: 30),
-              SizedBox(width: 14),
+              Icon(Icons.shield, color: Colors.amber, size: iconSize),
+              SizedBox(width: isSmallScreen ? 7 : 14),
               Text(
                 'Enfrentar Boss',
                 style: TextStyle(
-                  fontSize: 22,
+                  fontSize: buttonFontSize,
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                 ),
@@ -304,7 +320,7 @@ class _ChestPageState extends State<ChestPage> {
     } else {
       return Text(
         '${remainingTime.inHours}:${(remainingTime.inMinutes % 60).toString().padLeft(2, '0')}:${(remainingTime.inSeconds % 60).toString().padLeft(2, '0')}',
-        style: const TextStyle(fontSize: 20),
+        style: TextStyle(fontSize: buttonFontSize),
       );
     }
   }
@@ -317,7 +333,7 @@ class _ChestPageState extends State<ChestPage> {
         final isEmpty = chestController.value.isEmpty;
         return Column(
           children: [
-            const SizedBox(height: 24),
+            const SizedBox(height: 12),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Align(
@@ -363,6 +379,7 @@ class _ChestPageState extends State<ChestPage> {
                 ),
               ),
             ),
+            const SizedBox(height: 12),
             Expanded(
               child: isEmpty
                   ? Center(

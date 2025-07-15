@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cosmo_clicker/core/ui/animations/particle_explosion.dart';
 import 'package:cosmo_clicker/presentation/controllers/chest_controller.dart';
@@ -11,6 +13,8 @@ import 'package:cosmo_clicker/domain/entities/upgrade.dart';
 import 'package:cosmo_clicker/core/ui/boss_chest_open_notifier.dart';
 import 'package:cosmo_clicker/presentation/widgets/floating_text.dart';
 import 'package:cosmo_clicker/core/ui/widgets/game_snackbar.dart';
+
+import '../../core/constants/app_assets.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -35,6 +39,10 @@ class _MainPageState extends State<MainPage> {
 
   final List<FloatingText> _floatingTexts = [];
 
+  int _moonPhaseIndex = 0;
+  late final List<String> _moonPhases;
+  Timer? _moonPhaseTimer;
+
   @override
   void initState() {
     super.initState();
@@ -44,6 +52,29 @@ class _MainPageState extends State<MainPage> {
     upgradeController = GetIt.instance<UpgradeController>();
     _autoClickActive = statsController.value.autoClickActive;
     player = AudioPlayer();
+
+    _moonPhases = [
+      AppAssets.moonPhase01,
+      AppAssets.moonPhase02,
+      AppAssets.moonPhase03,
+      AppAssets.moonPhase04,
+      AppAssets.moonPhase05,
+      AppAssets.moonPhase06,
+      AppAssets.moonPhase07,
+      AppAssets.moonPhase08,
+    ];
+
+    _moonPhaseTimer = Timer.periodic(const Duration(seconds: 2), (_) {
+      setState(() {
+        _moonPhaseIndex = (_moonPhaseIndex + 1) % _moonPhases.length;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _moonPhaseTimer?.cancel();
+    super.dispose();
   }
 
   void _updateTapPosition(Offset position) {
@@ -67,7 +98,6 @@ class _MainPageState extends State<MainPage> {
   }
 
   void _clickHandler(details) async {
-    await player.play(AssetSource('sounds/level-up-bonus-sequence-1.mp3'));
     dustController.addDust(statsController.value.dustPerClick);
     final before = chestController.value.length;
     await chestController.tryDropChest();
@@ -138,6 +168,33 @@ class _MainPageState extends State<MainPage> {
                                           fit: BoxFit.cover,
                                         ),
                                       ),
+                                      Center(
+                                        child: Stack(
+                                          alignment: Alignment.center,
+                                          children: [
+                                            GestureDetector(
+                                              onTapDown: (details) {
+                                                _clickHandler(details);
+                                              },
+                                              child: AnimatedSwitcher(
+                                                duration: const Duration(
+                                                    milliseconds: 1800),
+                                                child: SizedBox(
+                                                  key:
+                                                      ValueKey(_moonPhaseIndex),
+                                                  width: 240,
+                                                  height: 240,
+                                                  child: Image.asset(
+                                                    _moonPhases[
+                                                        _moonPhaseIndex],
+                                                    fit: BoxFit.contain,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                       LayoutBuilder(
                                         builder: (context, constraints) {
                                           return ValueListenableBuilder<
@@ -160,6 +217,11 @@ class _MainPageState extends State<MainPage> {
                                                 starCount: starUpgrade.level,
                                                 width: constraints.maxWidth,
                                                 height: constraints.maxHeight,
+                                                moonCenter: Offset(
+                                                  constraints.maxWidth / 2,
+                                                  constraints.maxHeight / 2,
+                                                ),
+                                                moonRadius: 240,
                                               );
                                             },
                                           );

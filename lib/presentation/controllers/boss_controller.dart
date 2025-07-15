@@ -5,7 +5,7 @@ class BossController extends ValueNotifier<int> {
   final ValueNotifier<int> trophyCount;
 
   BossController({
-    this.baseHp = 100,
+    this.baseHp = 1000,
     required this.trophyCount,
   }) : super(100) {
     trophyCount.addListener(_updateHp);
