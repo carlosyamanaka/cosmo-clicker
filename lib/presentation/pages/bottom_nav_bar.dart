@@ -39,7 +39,7 @@ class BottomNavBar extends StatelessWidget {
             height: 22,
             fit: BoxFit.cover,
           ),
-          label: 'Baúzinho',
+          label: 'Tesouros',
         )
       ],
     );
